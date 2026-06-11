@@ -1,0 +1,76 @@
+id,kategori,mapel,tingkat_kesulitan,soal,pilihan_a,pilihan_b,pilihan_c,pilihan_d,jawaban,bobot
+1,SPMB SMA,Matematika,Mudah,"Hasil dari 3⁴ × 3² adalah ....","729","243","81","27",A,1
+2,SPMB SMA,Matematika,Mudah,"Nilai dari √144 adalah ....","10","11","12","13",C,1
+3,SPMB SMA,Matematika,Mudah,"Jika 2x + 5 = 17, maka nilai x adalah ....","4","5","6","7",C,1
+4,SPMB SMA,Matematika,Mudah,"Sebuah persegi memiliki sisi 12 cm. Luasnya adalah ....","24 cm²","48 cm²","144 cm²","288 cm²",C,1
+5,SPMB SMA,Matematika,Mudah,"Rata-rata dari 6, 8, 10, 12, dan 14 adalah ....","8","9","10","11",C,1
+6,SPMB SMA,Matematika,Mudah,"Harga sebuah buku Rp40.000. Jika mendapat diskon 25%, maka harga setelah diskon adalah ....","Rp25.000","Rp28.000","Rp30.000","Rp35.000",C,1
+7,SPMB SMA,Matematika,Mudah,"Volume kubus dengan panjang rusuk 5 cm adalah ....","25 cm³","75 cm³","100 cm³","125 cm³",D,1
+8,SPMB SMA,IPA,Mudah,"Satuan gaya dalam SI adalah ....","Joule","Newton","Watt","Pascal",B,1
+9,SPMB SMA,IPA,Mudah,"Organ yang berfungsi memompa darah ke seluruh tubuh adalah ....","Paru-paru","Hati","Jantung","Ginjal",C,1
+10,SPMB SMA,IPA,Mudah,"Planet yang dikenal sebagai Planet Merah adalah ....","Venus","Mars","Jupiter","Saturnus",B,1
+11,SPMB SMA,IPA,Mudah,"Perubahan wujud dari cair menjadi gas disebut ....","Membeku","Mengembun","Menyublim","Menguap",D,1
+12,SPMB SMA,IPA,Mudah,"Fotosintesis terjadi pada bagian tumbuhan yang mengandung ....","Xilem","Floem","Klorofil","Akar",C,1
+13,SPMB SMA,IPA,Mudah,"Hewan pemakan tumbuhan disebut ....","Karnivora","Omnivora","Herbivora","Predator",C,1
+14,SPMB SMA,IPA,Mudah,"Energi yang dimiliki benda karena geraknya disebut energi ....","Potensial","Kimia","Listrik","Kinetik",D,1
+15,SPMB SMA,Bahasa Inggris,Mudah,"Tina is a diligent student. What is Tina like?","Lazy","Diligent","Naughty","Careless",B,1
+16,SPMB SMA,Bahasa Inggris,Mudah,"The synonym of diligent is ....","Lazy","Hardworking","Weak","Slow",B,1
+17,SPMB SMA,Bahasa Inggris,Mudah,"She ____ to school every morning.","go","goes","going","gone",B,1
+18,SPMB SMA,Bahasa Inggris,Mudah,"Choose the correct sentence.","He don't like football.","He doesn't likes football.","He doesn't like football.","He not like football.",C,1
+19,SPMB SMA,Bahasa Inggris,Mudah,"What is the opposite of big?","Large","Huge","Small","Tall",C,1
+20,SPMB SMA,Bahasa Inggris,Mudah,"I am sorry for your loss. The expression shows ....","Congratulation","Sympathy","Gratitude","Invitation",B,1
+21,SPMB SMA,Bahasa Indonesia,Mudah,"Ide pokok paragraf adalah ....","Kalimat penjelas","Gagasan utama paragraf","Kalimat terakhir","Judul bacaan",B,1
+22,SPMB SMA,Bahasa Indonesia,Mudah,"Kata baku yang benar adalah ....","Resiko","Aktifitas","Ijin","Risiko",D,1
+23,SPMB SMA,Bahasa Indonesia,Mudah,"Antonim kata maju adalah ....","Depan","Mundur","Tinggi","Cepat",B,1
+24,SPMB SMA,Bahasa Indonesia,Mudah,"Kalimat efektif adalah ....","Para siswa-siswa sedang belajar.","Semua siswa hadir semuanya.","Siswa sedang belajar di kelas.","Naik ke atas segera.",C,1
+25,SPMB SMA,Bahasa Indonesia,Mudah,"Berita harus bersifat ....","Khayalan","Imajinatif","Faktual","Fiktif",C,1
+26,SPMB SMA,Matematika,Sedang,"Hasil dari 5² + 3² adalah ....","25","30","34","36",C,1
+27,SPMB SMA,Matematika,Sedang,"Jika 3x - 7 = 20, maka nilai x adalah ....","7","8","9","10",C,1
+28,SPMB SMA,Matematika,Sedang,"Keliling lingkaran yang memiliki jari-jari 7 cm adalah ....","22 cm","44 cm","49 cm","154 cm",B,1
+29,SPMB SMA,Matematika,Sedang,"Perbandingan uang Andi dan Budi adalah 3 : 5. Jika jumlah uang mereka Rp160.000, maka uang Budi adalah ....","Rp60.000","Rp80.000","Rp100.000","Rp120.000",C,1
+30,SPMB SMA,Matematika,Sedang,"Suku ke-10 dari barisan 2, 5, 8, 11, ... adalah ....","27","29","30","32",B,1
+31,SPMB SMA,Matematika,Sedang,"Bentuk sederhana dari 24/36 adalah ....","1/2","2/3","3/4","4/5",B,1
+32,SPMB SMA,Matematika,Sedang,"Luas segitiga dengan alas 12 cm dan tinggi 8 cm adalah ....","48 cm²","56 cm²","72 cm²","96 cm²",A,1
+33,SPMB SMA,Matematika,Sedang,"Jika harga sebuah tas Rp200.000 dan dikenakan PPN 11%, maka harga akhirnya adalah ....","Rp211.000","Rp220.000","Rp222.000","Rp230.000",C,1
+34,SPMB SMA,Matematika,Sedang,"Median dari data 5, 7, 8, 9, 11 adalah ....","7","8","9","10",B,1
+35,SPMB SMA,Matematika,Sedang,"Jika sebuah mobil melaju 60 km/jam selama 3 jam, maka jarak yang ditempuh adalah ....","120 km","150 km","180 km","200 km",C,1
+36,SPMB SMA,IPA,Sedang,"Bagian mata yang berfungsi mengatur banyak sedikitnya cahaya yang masuk adalah ....","Retina","Kornea","Iris","Lensa",C,1
+37,SPMB SMA,IPA,Sedang,"Contoh perubahan kimia adalah ....","Es mencair","Air membeku","Kertas dibakar","Garam larut",C,1
+38,SPMB SMA,IPA,Sedang,"Sumber energi utama bagi kehidupan di bumi adalah ....","Angin","Matahari","Air","Batu bara",B,1
+39,SPMB SMA,IPA,Sedang,"Organ pernapasan manusia adalah ....","Ginjal","Hati","Paru-paru","Lambung",C,1
+40,SPMB SMA,IPA,Sedang,"Tulang yang melindungi otak adalah ....","Tulang dada","Tulang rusuk","Tulang tengkorak","Tulang belakang",C,1
+41,SPMB SMA,IPA,Sedang,"Planet terbesar dalam tata surya adalah ....","Mars","Saturnus","Uranus","Jupiter",D,1
+42,SPMB SMA,IPA,Sedang,"Makhluk hidup yang dapat membuat makanan sendiri disebut ....","Konsumen","Produsen","Dekomposer","Predator",B,1
+43,SPMB SMA,IPA,Sedang,"Tekanan hidrostatis dipengaruhi oleh ....","Warna zat cair","Massa jenis dan kedalaman","Bentuk wadah","Suhu udara",B,1
+44,SPMB SMA,IPA,Sedang,"Alat untuk mengukur kuat arus listrik adalah ....","Voltmeter","Ohmmeter","Termometer","Amperemeter",D,1
+45,SPMB SMA,IPA,Sedang,"DNA terdapat di dalam ....","Sitoplasma","Membran sel","Inti sel","Ribosom",C,1
+46,SPMB SMA,Bahasa Inggris,Sedang,"My father ____ a teacher.","am","is","are","be",B,1
+47,SPMB SMA,Bahasa Inggris,Sedang,"The opposite of beautiful is ....","Pretty","Nice","Ugly","Attractive",C,1
+48,SPMB SMA,Bahasa Inggris,Sedang,"What time is it? 07.15","Seven fifteen","Seven fifty","Six fifteen","Eight fifteen",A,1
+49,SPMB SMA,Bahasa Inggris,Sedang,"I will help you. The sentence expresses ....","Promise","Sympathy","Apology","Gratitude",A,1
+50,SPMB SMA,Bahasa Inggris,Sedang,"Arrange the words into a correct sentence: library – in – studying – she – is – the","She studying is in the library.","In the library she studying is.","She is studying in the library.","Is she studying in the library.",C,1
+51,SPMB SMA,Matematika,Sulit,"Nilai dari (2⁵ × 2³) ÷ 2⁴ adalah ....","8","12","16","32",C,1
+52,SPMB SMA,Matematika,Sulit,"Jika 3/4 x = 18, maka nilai x adalah ....","20","22","24","26",C,1
+53,SPMB SMA,Matematika,Sulit,"Sebuah pekerjaan dapat diselesaikan dalam 12 hari oleh 8 orang. Jika dikerjakan oleh 6 orang dengan kemampuan sama, pekerjaan selesai dalam ....","14 hari","16 hari","18 hari","20 hari",B,1
+54,SPMB SMA,Matematika,Sulit,"Suku ke-15 dari barisan aritmetika 5, 8, 11, 14, ... adalah ....","45","47","49","51",B,1
+55,SPMB SMA,Matematika,Sulit,"Hasil dari √196 + √64 adalah ....","20","22","24","26",B,1
+56,SPMB SMA,Matematika,Sulit,"Luas lingkaran berjari-jari 14 cm adalah ....","616 cm²","620 cm²","624 cm²","628 cm²",A,1
+57,SPMB SMA,Matematika,Sulit,"Jika harga sebuah barang Rp500.000 didiskon 20% lalu didiskon lagi 10%, maka harga akhirnya adalah ....","Rp350.000","Rp360.000","Rp370.000","Rp400.000",B,1
+58,SPMB SMA,Matematika,Sulit,"Modus dari data 7, 8, 9, 8, 10, 8, 11 adalah ....","7","8","9","10",B,1
+59,SPMB SMA,Matematika,Sulit,"Perbandingan panjang dan lebar sebuah persegi panjang adalah 5 : 3. Jika panjangnya 20 cm, maka lebarnya ....","10 cm","12 cm","14 cm","15 cm",B,1
+60,SPMB SMA,Matematika,Sulit,"Hasil dari 15% × 400 adalah ....","40","50","60","80",C,1
+61,SPMB SMA,IPA,Sulit,"Jika sebuah benda bermassa 4 kg mengalami percepatan 3 m/s², gaya yang bekerja adalah ....","7 N","10 N","12 N","15 N",C,1
+62,SPMB SMA,IPA,Sulit,"Golongan darah yang dapat mendonorkan ke semua golongan darah adalah ....","A","B","AB","O",D,1
+63,SPMB SMA,IPA,Sulit,"Bagian tumbuhan yang berfungsi menyerap air dan mineral adalah ....","Batang","Daun","Akar","Bunga",C,1
+64,SPMB SMA,IPA,Sulit,"Lapisan atmosfer tempat terjadinya cuaca adalah ....","Stratosfer","Troposfer","Mesosfer","Termosfer",B,1
+65,SPMB SMA,IPA,Sulit,"Planet yang memiliki cincin paling jelas adalah ....","Mars","Venus","Saturnus","Merkurius",C,1
+66,SPMB SMA,IPA,Sulit,"Peristiwa naiknya air dari akar ke daun disebut ....","Difusi","Osmosis","Transpirasi","Kapilaritas",D,1
+67,SPMB SMA,IPA,Sulit,"Alat reproduksi betina pada bunga adalah ....","Benang sari","Mahkota bunga","Putik","Kelopak bunga",C,1
+68,SPMB SMA,IPA,Sulit,"Perubahan energi pada kipas angin adalah ....","Listrik → Cahaya","Listrik → Gerak","Kimia → Gerak","Panas → Gerak",B,1
+69,SPMB SMA,IPA,Sulit,"Organ yang menghasilkan empedu adalah ....","Lambung","Ginjal","Hati","Usus",C,1
+70,SPMB SMA,IPA,Sulit,"Jika tekanan diperbesar sedangkan luas bidang tekan tetap, maka gaya akan ....","Tetap","Berkurang","Bertambah","Hilang",C,1
+71,SPMB SMA,Bahasa Inggris,Sulit,"Rina loves reading books. Every weekend she visits the public library and borrows several books to read at home. Where does Rina go every weekend?","School","Market","Library","Hospital",C,1
+72,SPMB SMA,Bahasa Inggris,Sulit,"Rina loves reading books. Every weekend she visits the public library and borrows several books to read at home. What does she borrow?","Pens","Books","Magazines","Toys",B,1
+73,SPMB SMA,Bahasa Inggris,Sulit,"Choose the correct sentence.","They was playing football.","They are playing football.","They is playing football.","They am playing football.",B,1
+74,SPMB SMA,Bahasa Inggris,Sulit,"The synonym of happy is ....","Sad","Angry","Glad","Weak",C,1
+75,SPMB SMA,Bahasa Inggris,Sulit,"I won the competition. Appropriate response:","I'm sorry.","Congratulations!","Never mind.","Thank you.",B,1
