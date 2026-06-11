@@ -22,7 +22,7 @@
             @if ($questions->count() > 0)
             <div class="timer-container">
                 <i data-lucide="timer" class="timer-icon"></i>
-                <span id="timer">120:00</span>
+                <span id="timer">240:00</span>
             </div>
             @endif
         </div>
@@ -85,7 +85,7 @@
     lucide.createIcons();
 
     @if ($questions->count() > 0)
-    let timeLeft = 120 * 60; // 120 minutes
+    let timeLeft = 240 * 60; // 240 minutes
     const timerDisplay = document.getElementById('timer');
     const form = document.getElementById('cbtForm');
 
