@@ -1,0 +1,27 @@
+id,kategori,mapel,tingkat_kesulitan,soal,pilihan_a,pilihan_b,pilihan_c,pilihan_d,jawaban,bobot
+126,SPMB SMA,Bahasa Indonesia,Sedang,"Penulisan huruf kapital yang benar adalah ....","Kami membaca buku Sejarah.","Gubernur DKI jakarta meresmikan acara.","Paman berangkat ke Kota Surabaya.","Ibu membeli Jeruk bali.",C,1
+127,SPMB SMA,Bahasa Indonesia,Sulit,"Makna konotasi dari kata 'tangan kanan' adalah ....","Tangan sebelah kanan","Orang kepercayaan","Orang suruhan","Tukang pukul",B,1
+128,SPMB SMA,Bahasa Indonesia,Mudah,"Kalimat yang berisi perintah atau larangan disebut kalimat ....","Tanya","Berita","Imperatif","Deklaratif",C,1
+129,SPMB SMA,Bahasa Indonesia,Sedang,"Kata 'di mana' yang penulisannya benar terdapat pada kalimat ....","Di mana rumahmu?","Dimana kamu tinggal?","Buku itu dimana?","Ke mana dan dimana dia?",A,1
+130,SPMB SMA,Bahasa Indonesia,Sulit,"Struktur teks eksposisi yang benar adalah ....","Tesis - Argumentasi - Penegasan Ulang","Orientasi - Komplikasi - Resolusi","Pernyataan Umum - Deretan Penjelas","Pendahuluan - Isi - Penutup",A,1
+131,SPMB SMA,Bahasa Indonesia,Sedang,"Ciri kalimat pasif adalah ....","Subjek melakukan pekerjaan","Predikat berawalan me-","Subjek dikenai pekerjaan","Terdapat objek",C,1
+132,SPMB SMA,Bahasa Indonesia,Sulit,"Perbedaan mendasar antara cerpen dan novel adalah ....","Tema cerpen lebih rumit","Alur novel tunggal","Tokoh cerpen lebih banyak","Konflik cerpen lebih sederhana",D,1
+133,SPMB SMA,Bahasa Indonesia,Mudah,"Sinonim kata 'Bohong' adalah ....","Jujur","Dusta","Palsu","Asli",B,1
+134,SPMB SMA,Bahasa Indonesia,Sedang,"Kalimat 'Ayah membelikan adik sepeda baru' berpola ....","S-P-O-K","S-P-O-Pel","S-P-Pel","S-P-O",B,1
+135,SPMB SMA,Bahasa Indonesia,Sulit,"Majas yang digunakan pada kalimat 'Suaranya menggelegar membelah angkasa' adalah ....","Metafora","Hiperbola","Personifikasi","Litotes",B,1
+136,SPMB SMA,Bahasa Indonesia,Sedang,"Unsur intrinsik cerpen meliputi hal berikut, kecuali ....","Tema","Alur","Latar Belakang Pengarang","Sudut Pandang",C,1
+137,SPMB SMA,Bahasa Indonesia,Sulit,"Pantun kilat yang hanya terdiri dari 2 baris disebut ....","Gurindam","Syair","Karmina","Seloka",C,1
+138,SPMB SMA,Bahasa Indonesia,Mudah,"Kata dasar dari 'Mempertanggungjawabkan' adalah ....","Tanggung","Jawab","Tanggung jawab","Tanggungjawab",C,1
+139,SPMB SMA,Bahasa Indonesia,Sedang,"Karya sastra yang berisi sindiran atau kritik halus disebut ....","Ironi","Sarkasme","Satire","Sinisme",C,1
+140,SPMB SMA,Bahasa Indonesia,Sulit,"Perubahan ejaan dari 'Soeatoe' menjadi 'Suatu' mengikuti pedoman ....","Ejaan Van Ophuijsen","Ejaan Suwandi","EYD","PUEBI",B,1
+141,SPMB SMA,Bahasa Indonesia,Mudah,"Lawan kata 'Optimis' adalah ....","Semangat","Pesimis","Kritis","Apatis",B,1
+142,SPMB SMA,Bahasa Inggris,Sedang,"The passive form of 'Someone stole my wallet' is ....","My wallet was stolen","My wallet is stolen","My wallet is being stolen","My wallet has been stolen",A,1
+143,SPMB SMA,Bahasa Inggris,Sulit,"Neither John ... Mary knows the answer.","or","and","nor","but",C,1
+144,SPMB SMA,Bahasa Inggris,Mudah,"The plural form of 'Child' is ....","Childs","Childrens","Children","Childes",C,1
+145,SPMB SMA,Bahasa Inggris,Sedang,"She enjoys ... in the morning.","to jog","jogging","jogs","jog",B,1
+146,SPMB SMA,Bahasa Inggris,Sulit,"By the time you arrive, I ... my homework.","will finish","finish","will have finished","finished",C,1
+147,SPMB SMA,Bahasa Inggris,Mudah,"My mother is a doctor. ... works in a hospital.","She","He","It","They",A,1
+148,SPMB SMA,Bahasa Inggris,Sedang,"I wish I ... a millionaire.","am","was","were","be",C,1
+149,SPMB SMA,Bahasa Inggris,Sulit,"He asked me where ....","do I live","I lived","did I live","I live",B,1
+150,SPMB SMA,Bahasa Inggris,Sedang,"Water ... at 100 degrees Celsius.","boil","boils","boiled","is boiling",B,1
+151,SPMB SMA,Bahasa Inggris,Sulit,"Hardly had I reached the station ... the train left.","when","than","then","and",A,1

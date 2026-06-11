@@ -25,7 +25,7 @@ class ExamController extends Controller
         $mapel_ids = [];
         $mapels = ['Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris'];
         foreach ($mapels as $mapel) {
-            $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit(10)->pluck('id')->toArray();
+            $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit(25)->pluck('id')->toArray();
             $mapel_ids = array_merge($mapel_ids, $ids);
         }
         $questions_list = array_merge($tpa_ids, $mapel_ids);

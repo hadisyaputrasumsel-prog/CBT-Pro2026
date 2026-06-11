@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
         $csv_files = [
             base_path('soal_spmb_sma_2026_75_soal.csv'),
             base_path('soal_tpa.csv'),
-            base_path('soal_unggulan.csv')
+            base_path('soal_unggulan.csv'),
+            base_path('soal_tambahan_mapel.csv')
         ];
 
         foreach ($csv_files as $csv_file) {
