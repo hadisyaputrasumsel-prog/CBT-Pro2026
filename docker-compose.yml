@@ -9,13 +9,13 @@ services:
     container_name: cbt_app
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "8026:80"
     environment:
       - APP_NAME="CBT Pro 2026"
       - APP_ENV=production
       - APP_KEY=
       - APP_DEBUG=false
-      - APP_URL=http://localhost:8000
+      - APP_URL=http://localhost:8026
       - LOG_CHANNEL=stderr
       - DB_CONNECTION=mysql
       - DB_HOST=db
