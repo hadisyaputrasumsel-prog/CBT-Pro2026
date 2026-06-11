@@ -32,11 +32,12 @@ WORKDIR /var/www/html
 # Copy existing application directory contents
 COPY . /var/www/html
 
-# Allow composer to run as root
+# Allow composer to run as root and without memory limit
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_MEMORY_LIMIT=-1
 
 # Install Laravel dependencies
-RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs
+RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
 # Ensure permissions
 RUN chown -R www-data:www-data /var/www/html \
