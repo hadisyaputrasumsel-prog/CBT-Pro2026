@@ -1,0 +1,21 @@
+id,kategori,mapel,tingkat_kesulitan,soal,pilihan_a,pilihan_b,pilihan_c,pilihan_d,jawaban,bobot
+106,SPMB SMA,Matematika,Sedang,"Hasil dari 2(3x - 4) + 3(x + 2) adalah ....","9x - 2","9x + 2","8x - 2","8x + 2",A,1
+107,SPMB SMA,Matematika,Sulit,"Akar-akar persamaan kuadrat x² - 5x + 6 = 0 adalah ....","2 dan 3","-2 dan -3","1 dan 6","-1 dan -6",A,1
+108,SPMB SMA,Matematika,Mudah,"KPK dari 12 dan 18 adalah ....","36","24","72","108",A,1
+109,SPMB SMA,Matematika,Sedang,"Sebuah tabung memiliki jari-jari 7 cm dan tinggi 10 cm. Volumenya adalah ....","1540 cm³","1440 cm³","2200 cm³","3080 cm³",A,1
+110,SPMB SMA,Matematika,Sulit,"Suku ke-n dari barisan aritmetika adalah Un = 3n - 1. Jumlah 10 suku pertama barisan tersebut adalah ....","155","160","165","170",A,1
+111,SPMB SMA,IPA,Sedang,"Hukum I Newton sering juga disebut sebagai hukum ....","Kelembaman","Aksi-Reaksi","Gravitasi","Kekekalan Energi",A,1
+112,SPMB SMA,IPA,Sulit,"Ciri makhluk hidup yang bertujuan melestarikan jenisnya adalah ....","Berkembang biak","Tumbuh","Bernapas","Bergerak",A,1
+113,SPMB SMA,IPA,Mudah,"Gas yang paling banyak terdapat di atmosfer bumi adalah ....","Nitrogen","Oksigen","Karbon dioksida","Hidrogen",A,1
+114,SPMB SMA,IPA,Sedang,"Zat yang berfungsi mempercepat reaksi kimia tanpa ikut bereaksi disebut ....","Katalis","Enzim","Inhibitor","Substrat",A,1
+115,SPMB SMA,IPA,Sulit,"Organel sel yang berfungsi sebagai tempat respirasi sel adalah ....","Mitokondria","Ribosom","Lisosom","Badan Golgi",A,1
+116,SPMB SMA,Bahasa Indonesia,Sedang,"Kata hubung yang tepat untuk kalimat majemuk setara adalah ....","Dan","Sehingga","Karena","Walaupun",A,1
+117,SPMB SMA,Bahasa Indonesia,Sulit,"Majas yang melebih-lebihkan suatu kenyataan disebut majas ....","Hiperbola","Personifikasi","Metafora","Litotes",A,1
+118,SPMB SMA,Bahasa Indonesia,Mudah,"Antonim dari kata 'Progresif' adalah ....","Regresif","Statis","Konservatif","Dinamis",A,1
+119,SPMB SMA,Bahasa Indonesia,Sedang,"Gagasan utama biasanya terletak pada kalimat ....","Utama","Penjelas","Tengah","Pertama dan akhir",A,1
+120,SPMB SMA,Bahasa Indonesia,Sulit,"Puisi lama yang terdiri dari empat baris bersajak a-b-a-b disebut ....","Pantun","Syair","Gurindam","Karmina",A,1
+121,SPMB SMA,Bahasa Inggris,Sedang,"I ... a good movie yesterday.","saw","see","seeing","seen",A,1
+122,SPMB SMA,Bahasa Inggris,Sulit,"If she had studied harder, she ... the exam.","would have passed","will pass","would pass","passed",A,1
+123,SPMB SMA,Bahasa Inggris,Mudah,"The opposite of 'Expensive' is ....","Cheap","Rich","High","Low",A,1
+124,SPMB SMA,Bahasa Inggris,Sedang,"They are looking forward ... you.","to seeing","to see","seeing","see",A,1
+125,SPMB SMA,Bahasa Inggris,Sulit,"'The letter was written by him.' The active voice is ....","He wrote the letter","He writes the letter","He is writing the letter","He has written the letter",A,1
