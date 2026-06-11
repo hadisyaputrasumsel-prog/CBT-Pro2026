@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cbt-pro-2026-app
+    container_name: cbt_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      - APP_NAME="CBT Pro 2026"
+      - APP_ENV=production
+      - APP_KEY=
+      - APP_DEBUG=false
+      - APP_URL=http://localhost:8000
+      - LOG_CHANNEL=stderr
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=cbt_db
+      - DB_USERNAME=cbt_user
+      - DB_PASSWORD=cbt_password
+    depends_on:
+      - db
+    networks:
+      - cbt-network
+
+  db:
+    image: mariadb:10.11
+    container_name: cbt_db
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: cbt_db
+      MYSQL_USER: cbt_user
+      MYSQL_PASSWORD: cbt_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - cbt-network
+
+networks:
+  cbt-network:
+    driver: bridge
+
+volumes:
+  dbdata:
