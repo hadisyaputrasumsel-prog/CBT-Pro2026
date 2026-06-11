@@ -13,9 +13,10 @@ services:
     environment:
       - APP_NAME="CBT Pro 2026"
       - APP_ENV=production
-      - APP_KEY=
-      - APP_DEBUG=false
+      - APP_KEY=base64:qwT7CUdtmDYCdMUj34cGHrLcLA1rRTeftMc81skxPtQ=
+      - APP_DEBUG=true
       - APP_URL=http://localhost:8026
+      - SESSION_DRIVER=file
       - LOG_CHANNEL=stderr
       - DB_CONNECTION=mysql
       - DB_HOST=db
