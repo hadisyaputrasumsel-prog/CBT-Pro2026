@@ -1,0 +1,31 @@
+id,kategori,mapel,tingkat_kesulitan,soal,pilihan_a,pilihan_b,pilihan_c,pilihan_d,jawaban,bobot
+76,TPA,TPA,Sedang,"Sinonim dari kata EVOKASI adalah ....","Penggugah rasa","Penilaian","Perubahan","Pengungsian",A,1
+77,TPA,TPA,Mudah,"Antonim dari kata PROMINEN adalah ....","Terkemuka","Biasa","Konsisten","Perintis",B,1
+78,TPA,TPA,Sedang,"KENDARAAN : MOBIL = ....","Laut : Danau","Orang : Pemuda","Binatang : Kambing","Buku : Kertas",C,1
+79,TPA,TPA,Sulit,"Jika semua kambing makan rumput dan beberapa hewan bertanduk adalah kambing, maka ....","Semua hewan bertanduk makan rumput","Beberapa hewan bertanduk makan rumput","Kambing yang bertanduk tidak makan rumput","Semua hewan bertanduk adalah kambing",B,1
+80,TPA,TPA,Mudah,"Deret angka: 2, 4, 8, 16, 32, ... Angka selanjutnya adalah ....","48","64","80","128",B,1
+81,TPA,TPA,Sedang,"Deret angka: 3, 6, 12, 15, 30, 33, ... Angka selanjutnya adalah ....","36","60","66","69",C,1
+82,TPA,TPA,Sulit,"Seseorang berjalan 10 m ke utara, lalu 15 m ke timur, dan 10 m ke selatan. Jarak orang tersebut dari posisi awal adalah ....","10 m","15 m","20 m","35 m",B,1
+83,TPA,TPA,Sedang,"Umur Budi 5 tahun lebih tua dari Andi. Jika jumlah umur mereka 35 tahun, maka umur Budi adalah ....","15 tahun","20 tahun","25 tahun","30 tahun",B,1
+84,TPA,TPA,Mudah,"Sinonim dari kata BOGEL adalah ....","Tinggi","Kerdil","Gendut","Kurus",B,1
+85,TPA,TPA,Sedang,"MATAHARI : BUMI = BUMI : ....","Bulan","Bintang","Matahari","Planet",A,1
+86,TPA,TPA,Sulit,"Semua guru adalah pegawai negeri. Sebagian guru adalah penulis. Kesimpulannya ....","Sebagian penulis adalah pegawai negeri","Semua penulis adalah pegawai negeri","Semua pegawai negeri adalah penulis","Sebagian pegawai negeri bukan penulis",A,1
+87,TPA,TPA,Sedang,"Deret huruf: A, C, F, J, O, ... Huruf selanjutnya adalah ....","S","T","U","V",C,1
+88,TPA,TPA,Mudah,"20% dari 150 adalah ....","20","25","30","35",C,1
+89,TPA,TPA,Sedang,"Sebuah barang dijual seharga Rp120.000 dengan keuntungan 20%. Harga beli barang tersebut adalah ....","Rp96.000","Rp100.000","Rp110.000","Rp144.000",B,1
+90,TPA,TPA,Sulit,"Jika x = 1/3 dan y = 30%, maka pernyataan yang benar adalah ....","x > y","x < y","x = y","x dan y tidak bisa ditentukan",A,1
+91,TPA,TPA,Mudah,"Antonim dari kata TENTATIF adalah ....","Pasti","Sementara","Ragu-ragu","Cepat",A,1
+92,TPA,TPA,Sedang,"GURU : SEKOLAH = DOKTER : ....","Penyakit","Obat","Pasien","Rumah Sakit",D,1
+93,TPA,TPA,Sulit,"Ada 5 orang duduk melingkar. A duduk di sebelah B. C duduk di antara B dan D. Jika E duduk di sebelah D, maka A duduk di antara ....","B dan C","B dan E","C dan D","D dan E",B,1
+94,TPA,TPA,Mudah,"Hasil dari 15 + 8 × 2 adalah ....","31","46","60","16",A,1
+95,TPA,TPA,Sedang,"Jika 3 porsi nasi goreng harganya Rp45.000, maka harga 7 porsi adalah ....","Rp90.000","Rp105.000","Rp115.000","Rp125.000",B,1
+96,TPA,TPA,Sulit,"Deret angka: 1, 1, 2, 3, 5, 8, ... Angka selanjutnya adalah ....","11","12","13","14",C,1
+97,TPA,TPA,Mudah,"Sinonim dari IMPLISIT adalah ....","Tersurat","Tersirat","Terbuka","Jelas",B,1
+98,TPA,TPA,Sedang,"Antonim dari EKSKLUSIF adalah ....","Khusus","Mahal","Umum","Sempit",C,1
+99,TPA,TPA,Sulit,"Sebuah kereta melaju dengan kecepatan 72 km/jam. Jarak yang ditempuh dalam 10 detik adalah ....","20 m","72 m","100 m","200 m",D,1
+100,TPA,TPA,Sedang,"Sebuah kubus memiliki volume 512 cm³. Luas permukaan kubus tersebut adalah ....","384 cm²","256 cm²","128 cm²","512 cm²",A,1
+101,TPA,TPA,Mudah,"AIR : HAUS = MAKANAN : ....","Kenyang","Lapar","Gizi","Mulut",B,1
+102,TPA,TPA,Sedang,"Semua burung bisa terbang. Penguin adalah burung. Maka ....","Penguin bisa terbang","Penguin mungkin bisa terbang","Penguin tidak bisa terbang","Kesimpulan tidak dapat ditentukan dari premis",A,1
+103,TPA,TPA,Sulit,"Nilai x yang memenuhi persamaan 3^(x-1) = 27 adalah ....","2","3","4","5",C,1
+104,TPA,TPA,Sedang,"Jika hari hujan, maka Budi membawa payung. Hari ini Budi tidak membawa payung. Maka ....","Hari ini tidak hujan","Budi lupa","Hari ini cerah","Payung Budi hilang",A,1
+105,TPA,TPA,Mudah,"Deret angka: 100, 95, 85, 70, 50, ... Angka selanjutnya adalah ....","20","25","30","35",B,1

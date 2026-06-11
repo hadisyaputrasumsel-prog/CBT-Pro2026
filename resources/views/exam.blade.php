@@ -61,7 +61,7 @@
             @if ($questions->count() > 0)
             <div class="timer-container">
                 <i data-lucide="timer" class="timer-icon"></i>
-                <span id="timer">240:00</span>
+                <span id="timer">120:00</span>
             </div>
             @endif
         </div>
@@ -83,10 +83,10 @@
             <form id="cbtForm" method="POST" action="{{ route('exam.submit') }}">
                 @csrf
                 <div class="tabs-container">
-                    @php $levels = ['Mudah', 'Sedang', 'Sulit']; @endphp
+                    @php $levels = ['TPA', 'Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris']; @endphp
                     @foreach($levels as $index => $level)
-                        <button type="button" class="tab-btn {{ $index === 0 ? 'active' : '' }}" data-target="tab-{{ strtolower($level) }}">
-                            Soal {{ $level }}
+                        <button type="button" class="tab-btn {{ $index === 0 ? 'active' : '' }}" data-target="tab-{{ str_replace(' ', '-', strtolower($level)) }}">
+                            {{ $level }}
                         </button>
                     @endforeach
                 </div>
@@ -94,8 +94,8 @@
                 <div class="questions-list">
                     @php $globalIndex = 1; @endphp
                     @foreach($levels as $index => $level)
-                        <div class="tab-content {{ $index === 0 ? 'active' : '' }}" id="tab-{{ strtolower($level) }}">
-                            @foreach ($questions->where('tingkat_kesulitan', $level) as $q)
+                        <div class="tab-content {{ $index === 0 ? 'active' : '' }}" id="tab-{{ str_replace(' ', '-', strtolower($level)) }}">
+                            @foreach ($questions->where('mapel', $level) as $q)
                                 <div class="question-card" id="q_card_{{ $q->id }}">
                                     <div class="question-header">
                                         <span class="q-number">{{ $globalIndex++ }}</span>
@@ -138,7 +138,7 @@
     lucide.createIcons();
 
     @if ($questions->count() > 0)
-    let timeLeft = 240 * 60; // 240 minutes
+    let timeLeft = 120 * 60; // 120 minutes
     const timerDisplay = document.getElementById('timer');
     const form = document.getElementById('cbtForm');
 

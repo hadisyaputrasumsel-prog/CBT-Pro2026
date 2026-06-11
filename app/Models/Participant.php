@@ -11,5 +11,10 @@ class Participant extends Model
         'nim',
         'status',
         'score',
+        'questions_list',
+    ];
+
+    protected $casts = [
+        'questions_list' => 'array',
     ];
 }

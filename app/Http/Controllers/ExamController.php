@@ -21,10 +21,20 @@ class ExamController extends Controller
             'nim' => 'nullable|string|max:255',
         ]);
 
+        $tpa_ids = Question::where('kategori', 'TPA')->inRandomOrder()->limit(30)->pluck('id')->toArray();
+        $mapel_ids = [];
+        $mapels = ['Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris'];
+        foreach ($mapels as $mapel) {
+            $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit(10)->pluck('id')->toArray();
+            $mapel_ids = array_merge($mapel_ids, $ids);
+        }
+        $questions_list = array_merge($tpa_ids, $mapel_ids);
+
         $participant = Participant::create([
             'name' => $request->name,
             'nim' => $request->nim,
             'status' => 'mengerjakan',
+            'questions_list' => $questions_list,
         ]);
 
         session(['participant_id' => $participant->id]);
@@ -38,8 +48,19 @@ class ExamController extends Controller
             return redirect()->route('exam.welcome');
         }
 
-        $questions = Question::all();
-        return view('exam', compact('questions'));
+        $participant = Participant::find(session('participant_id'));
+        if (!$participant || !$participant->questions_list) {
+            return redirect()->route('exam.welcome');
+        }
+
+        $questions = Question::whereIn('id', $participant->questions_list)->get();
+        // Sort questions by mapel logically
+        $questions = $questions->sortBy(function($q) {
+            $order = ['TPA' => 1, 'Matematika' => 2, 'IPA' => 3, 'Bahasa Indonesia' => 4, 'Bahasa Inggris' => 5];
+            return $order[$q->mapel] ?? 99;
+        });
+
+        return view('exam', compact('questions', 'participant'));
     }
 
     public function submit(Request $request)
@@ -49,8 +70,11 @@ class ExamController extends Controller
         }
 
         $participant = Participant::find(session('participant_id'));
+        if (!$participant || !$participant->questions_list) {
+            return redirect()->route('exam.welcome');
+        }
 
-        $questions = Question::all();
+        $questions = Question::whereIn('id', $participant->questions_list)->get();
         $score = 0;
         $total_bobot = 0;
         $correct = 0;
