@@ -168,6 +168,29 @@ class ExamController extends Controller
         }
 
         $final_score = ($total_bobot > 0) ? round(($score / $total_bobot) * 100, 2) : 0;
+        
+        $time_taken_seconds = $request->input('time_taken_seconds', 0);
+        
+        $tab_results = $participant->tab_results ?? [];
+        $tab_results[$mapel] = [
+            'score' => $final_score,
+            'time_taken_seconds' => $time_taken_seconds,
+            'correct' => $correct,
+            'wrong' => $wrong,
+            'unanswered' => $unanswered,
+            'total' => $questions->count()
+        ];
+        
+        $participant->tab_results = $tab_results;
+        
+        // Cek jika ini adalah tab kelima / terakhir yang disubmit (jika perlu)
+        if (count($tab_results) >= 5) {
+            $participant->status = 'selesai';
+            // Hitung rata-rata final_score atau biarkan 0 jika tidak perlu
+            $participant->score = collect($tab_results)->avg('score');
+        }
+        
+        $participant->save();
 
         return response()->json([
             'mapel' => $mapel,

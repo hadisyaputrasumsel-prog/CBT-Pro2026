@@ -178,28 +178,50 @@
                 <thead>
                     <tr>
                         <th>Waktu Mulai</th>
-                        <th>Nama Peserta</th>
-                        <th>NIM / NIS</th>
+                        <th>Nama Peserta & NIM</th>
                         <th>Status</th>
-                        <th>Nilai</th>
+                        <th>Nilai Rata-rata</th>
+                        <th>Detail Per Tab (Nilai & Waktu)</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($participants as $p)
                         <tr>
                             <td style="color: #94a3b8;">{{ $p->created_at->format('d M Y, H:i') }}</td>
-                            <td style="font-weight: 500;">{{ $p->name }}</td>
-                            <td>{{ $p->nim ?? '-' }}</td>
+                            <td>
+                                <div style="font-weight: 500;">{{ $p->name }}</div>
+                                <div style="font-size: 0.8rem; color: #94a3b8;">{{ $p->nim ?? '-' }}</div>
+                            </td>
                             <td>
                                 <span class="badge-status status-{{ $p->status }}">
                                     {{ ucfirst($p->status) }}
                                 </span>
                             </td>
                             <td>
-                                @if($p->status == 'selesai')
+                                @if($p->status == 'selesai' || ($p->tab_results && count($p->tab_results) > 0))
                                     <span style="font-weight: 600; font-family: 'Outfit', sans-serif;">{{ $p->score }}</span>
                                 @else
                                     <span style="color: #64748b;">-</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($p->tab_results && is_array($p->tab_results))
+                                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                                        @foreach($p->tab_results as $mapel => $res)
+                                            <div style="font-size: 0.85rem; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; display: flex; justify-content: space-between;">
+                                                <span style="font-weight: 500;">{{ $mapel }}</span>
+                                                <span>
+                                                    <span style="color: #3b82f6; font-weight: bold; margin-right: 8px;">{{ $res['score'] }}</span>
+                                                    <span style="color: #94a3b8;">
+                                                        <i data-lucide="clock" style="width: 12px; height: 12px; display: inline-block;"></i>
+                                                        {{ floor($res['time_taken_seconds'] / 60) }}m {{ $res['time_taken_seconds'] % 60 }}s
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <span style="color: #64748b; font-size: 0.85rem;">Belum ada data</span>
                                 @endif
                             </td>
                         </tr>

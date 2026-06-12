@@ -12,9 +12,11 @@ class Participant extends Model
         'status',
         'score',
         'questions_list',
+        'tab_results',
     ];
 
     protected $casts = [
         'questions_list' => 'array',
+        'tab_results' => 'array',
     ];
 }

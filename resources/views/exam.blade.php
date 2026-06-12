@@ -185,6 +185,9 @@
         // Calculate time taken
         let timeTakenSeconds = (30 * 60) - tabTimes[tabId];
         if (timeTakenSeconds < 0) timeTakenSeconds = 0;
+        
+        formData.append('time_taken_seconds', timeTakenSeconds);
+        
         let m = Math.floor(timeTakenSeconds / 60);
         let s = timeTakenSeconds % 60;
         let timeStr = `${m} menit ${s} detik`;
