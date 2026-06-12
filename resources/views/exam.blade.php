@@ -118,6 +118,7 @@
                                         @endforeach
                                     </div>
                                 </div>
+                                @endforeach
                             <div class="form-actions glass-footer" style="margin-top: 20px; border-radius: 8px;">
                                 <button type="button" class="btn btn-outline btnCheck">Cek Jawaban Kosong</button>
                                 <button type="button" class="btn btn-primary btnSubmitTab" data-mapel="{{ $level }}" data-target="tab-{{ str_replace(' ', '-', strtolower($level)) }}">
