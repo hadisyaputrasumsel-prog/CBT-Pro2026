@@ -107,15 +107,75 @@ class ExamController extends Controller
 
         $final_score = ($total_bobot > 0) ? round(($score / $total_bobot) * 100, 2) : 0;
 
+        $time_taken = '0 detik';
         if ($participant) {
             $participant->update([
                 'status' => 'selesai',
                 'score' => $final_score
             ]);
+            
+            $duration_seconds = $participant->updated_at->diffInSeconds($participant->created_at);
+            $hours = floor($duration_seconds / 3600);
+            $minutes = floor(($duration_seconds % 3600) / 60);
+            $seconds = $duration_seconds % 60;
+            
+            $time_parts = [];
+            if ($hours > 0) $time_parts[] = $hours . ' jam';
+            if ($minutes > 0) $time_parts[] = $minutes . ' menit';
+            if ($seconds > 0 || empty($time_parts)) $time_parts[] = $seconds . ' detik';
+            
+            $time_taken = implode(' ', $time_parts);
         }
 
         session()->forget('participant_id');
 
-        return view('result', compact('questions', 'score', 'total_bobot', 'correct', 'wrong', 'unanswered', 'results', 'final_score'));
+        return view('result', compact('questions', 'score', 'total_bobot', 'correct', 'wrong', 'unanswered', 'results', 'final_score', 'time_taken'));
+    }
+
+    public function submitTab(Request $request)
+    {
+        if (!session()->has('participant_id')) {
+            return response()->json(['error' => 'Session expired'], 401);
+        }
+
+        $participant = Participant::find(session('participant_id'));
+        if (!$participant) {
+            return response()->json(['error' => 'Participant not found'], 404);
+        }
+
+        $mapel = $request->input('mapel');
+        $questions = Question::whereIn('id', $participant->questions_list)->where('mapel', $mapel)->get();
+        
+        $score = 0;
+        $total_bobot = 0;
+        $correct = 0;
+        $wrong = 0;
+        $unanswered = 0;
+
+        foreach ($questions as $q) {
+            $ans = $request->input('q_' . $q->id);
+            $bobot = $q->bobot;
+            $total_bobot += $bobot;
+
+            if ($ans === $q->jawaban) {
+                $score += $bobot;
+                $correct++;
+            } elseif ($ans !== null) {
+                $wrong++;
+            } else {
+                $unanswered++;
+            }
+        }
+
+        $final_score = ($total_bobot > 0) ? round(($score / $total_bobot) * 100, 2) : 0;
+
+        return response()->json([
+            'mapel' => $mapel,
+            'score' => $final_score,
+            'correct' => $correct,
+            'wrong' => $wrong,
+            'unanswered' => $unanswered,
+            'total' => $questions->count()
+        ]);
     }
 }

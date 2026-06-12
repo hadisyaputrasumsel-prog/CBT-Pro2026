@@ -8,5 +8,6 @@ Route::get('/', [ExamController::class, 'welcome'])->name('exam.welcome');
 Route::post('/start', [ExamController::class, 'start'])->name('exam.start');
 Route::get('/exam', [ExamController::class, 'index'])->name('exam.index');
 Route::post('/submit', [ExamController::class, 'submit'])->name('exam.submit');
+Route::post('/submit-tab', [ExamController::class, 'submitTab'])->name('exam.submit_tab');
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

@@ -58,6 +58,13 @@
                         <span class="stat-label">Kosong</span>
                     </div>
                 </div>
+                <div class="stat-card time-taken" style="grid-column: 1 / -1; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2);">
+                    <i data-lucide="clock" style="color: #3b82f6;"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" style="font-size: 1.25rem;">{{ $time_taken }}</span>
+                        <span class="stat-label">Waktu Pengerjaan</span>
+                    </div>
+                </div>
             </div>
 
             <div class="action-buttons">
