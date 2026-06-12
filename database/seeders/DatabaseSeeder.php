@@ -41,5 +41,9 @@ class DatabaseSeeder extends Seeder
                 fclose($handle);
             }
         }
+
+        $this->call([
+            SulitQuestionsSeeder::class,
+        ]);
     }
 }
