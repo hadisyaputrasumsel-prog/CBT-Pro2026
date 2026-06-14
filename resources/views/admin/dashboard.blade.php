@@ -11,6 +11,87 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 260px;
+            background: rgba(15, 23, 42, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
+            z-index: 100;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .nav-item i {
+            width: 20px; height: 20px;
+        }
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            transform: translateX(4px);
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
+            color: #fff;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+        .main-content-area {
+            flex: 1;
+            margin-left: 260px;
+            padding: 40px;
+            max-width: 1400px;
+        }
+        .admin-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .admin-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .admin-header {
             display: flex;
             justify-content: space-between;
@@ -19,33 +100,42 @@
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
         .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 20px;
+            padding: 24px;
             display: flex;
             align-items: center;
             gap: 15px;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
         }
         .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
             background: rgba(59, 130, 246, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #3b82f6;
         }
+        .stat-icon i {
+            width: 24px; height: 24px;
+        }
         .stat-info h3 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin: 0;
             font-family: 'Outfit', sans-serif;
+            font-weight: 700;
         }
         .stat-info p {
             margin: 0;
@@ -53,8 +143,8 @@
             font-size: 0.9rem;
         }
         .table-container {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             overflow: hidden;
             backdrop-filter: blur(20px);
@@ -64,17 +154,17 @@
             border-collapse: collapse;
         }
         th, td {
-            padding: 16px 20px;
+            padding: 18px 24px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         th {
             background: rgba(0, 0, 0, 0.2);
             font-weight: 600;
-            color: #e2e8f0;
+            color: #94a3b8;
             text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
         }
         tr:last-child td {
             border-bottom: none;
@@ -103,7 +193,7 @@
             gap: 10px;
             margin-bottom: 20px;
             overflow-x: auto;
-            padding-bottom: 5px;
+            padding-bottom: 10px;
         }
         .admin-tabs::-webkit-scrollbar {
             height: 6px;
@@ -144,285 +234,192 @@
 </head>
 <body>
 
-<div class="app-container">
-    <header class="glass-header">
-        <div class="header-content">
-            <div class="logo">
-                <i data-lucide="shield-check"></i>
-                <h1>Admin<span>Dashboard</span></h1>
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); padding: 10px; border-radius: 12px; display: flex; box-shadow: 0 4px 15px rgba(59,130,246,0.3);">
+                <i data-lucide="shield-check" style="color: white; width: 22px; height: 22px;"></i>
             </div>
-            <div>
-                <a href="{{ route('exam.index') }}" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;">
-                    <i data-lucide="external-link"></i> Halaman Ujian
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <main class="main-content" style="max-width: 1200px;">
-        <div class="admin-header">
-            <div>
-                <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 5px;">Pantau Peserta Ujian</h2>
-                <p style="color: #94a3b8; margin: 0;">Lihat status dan hasil dari peserta CBT secara real-time.</p>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <form action="{{ route('admin.settings.toggle') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn {{ ($settings['show_kunci_jawaban'] ?? true) ? 'btn-outline' : 'btn-primary' }}" style="padding: 10px 20px; border-color: #ef4444; color: {{ ($settings['show_kunci_jawaban'] ?? true) ? '#ef4444' : '#fff' }}; background: {{ ($settings['show_kunci_jawaban'] ?? true) ? 'transparent' : '#ef4444' }};">
-                        <i data-lucide="{{ ($settings['show_kunci_jawaban'] ?? true) ? 'eye-off' : 'eye' }}"></i> 
-                        {{ ($settings['show_kunci_jawaban'] ?? true) ? 'Sembunyikan Kunci' : 'Tampilkan Kunci' }}
-                    </button>
-                </form>
-                <button onclick="window.location.reload()" class="btn btn-primary" style="padding: 10px 20px;">
-                    <i data-lucide="refresh-cw"></i> Segarkan Data
-                </button>
-            </div>
-        </div>
-
-        @php
-            $total = $participants->count();
-            $selesai = $participants->where('status', 'selesai')->count();
-            $mengerjakan = $participants->where('status', 'mengerjakan')->count();
-            $avgScore = $selesai > 0 ? $participants->where('status', 'selesai')->avg('score') : 0;
-        @endphp
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i data-lucide="users"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ $total }}</h3>
-                    <p>Total Peserta</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(234, 179, 8, 0.1); color: #eab308;">
-                    <i data-lucide="clock"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ $mengerjakan }}</h3>
-                    <p>Sedang Mengerjakan</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
-                    <i data-lucide="check-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ $selesai }}</h3>
-                    <p>Selesai Ujian</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
-                    <i data-lucide="award"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ number_format($avgScore, 1) }}</h3>
-                    <p>Rata-rata Nilai</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Waktu Mulai</th>
-                        <th>Nama Peserta & NIM</th>
-                        <th>Status</th>
-                        <th>Nilai Rata-rata</th>
-                        <th>Detail Per Tab (Nilai & Waktu)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($participants as $p)
-                        <tr>
-                            <td style="color: #94a3b8;">{{ $p->created_at->format('d M Y, H:i') }}</td>
-                            <td>
-                                <div style="font-weight: 500;">{{ $p->name }}</div>
-                                <div style="font-size: 0.8rem; color: #94a3b8;">{{ $p->nim ?? '-' }}</div>
-                            </td>
-                            <td>
-                                <span class="badge-status status-{{ $p->status }}">
-                                    {{ ucfirst($p->status) }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($p->status == 'selesai' || ($p->tab_results && count($p->tab_results) > 0))
-                                    <span style="font-weight: 600; font-family: 'Outfit', sans-serif;">{{ $p->score }}</span>
-                                @else
-                                    <span style="color: #64748b;">-</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($p->tab_results && is_array($p->tab_results))
-                                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                                        @foreach($p->tab_results as $mapel => $res)
-                                            <div style="font-size: 0.85rem; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; display: flex; justify-content: space-between;">
-                                                <span style="font-weight: 500;">{{ $mapel }}</span>
-                                                <span>
-                                                    <span style="color: #3b82f6; font-weight: bold; margin-right: 8px;">{{ $res['score'] }}</span>
-                                                    <span style="color: #94a3b8;">
-                                                        <i data-lucide="clock" style="width: 12px; height: 12px; display: inline-block;"></i>
-                                                        {{ floor($res['time_taken_seconds'] / 60) }}m {{ $res['time_taken_seconds'] % 60 }}s
-                                                    </span>
-                                                </span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <span style="color: #64748b; font-size: 0.85rem;">Belum ada data</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: #94a3b8;">
-                                <i data-lucide="inbox" style="width: 48px; height: 48px; margin-bottom: 10px; opacity: 0.5;"></i>
-                                <p>Belum ada peserta yang mendaftar ujian.</p>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        </div>
-
-        <div class="admin-header" style="margin-top: 40px; margin-bottom: 20px;">
-            <div>
-                <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 5px;">AI Question Generator (Manual)</h2>
-                <p style="color: #94a3b8; margin: 0;">Tambah soal otomatis tanpa bentrok dengan soal yang sudah ada.</p>
-            </div>
+            CBT<span>Admin</span>
         </div>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;">
-            <!-- Langkah 1 -->
-            <div class="stat-card" style="flex-direction: column; align-items: flex-start; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                    <div style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
-                    <h3 style="margin: 0; font-size: 1.1rem; color:#1e293b; font-family: 'Outfit', sans-serif;">Generate Prompt</h3>
-                </div>
-                <p style="color:#64748b; font-size:0.9rem; margin-bottom: 20px; line-height: 1.5;">Pilih mata pelajaran dan jumlah soal. Sistem akan membuat instruksi (prompt) yang menyertakan soal lama agar AI tidak membuat soal yang redundan.</p>
-                
-                <div style="display: flex; gap: 15px; width: 100%; margin-bottom: 15px;">
-                    <div style="flex: 2;">
-                        <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px; font-weight: 500;">Mata Pelajaran</label>
-                        <select id="geminiMapel" style="width: 100%; background: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; font-family: 'Inter', sans-serif; outline: none;">
-                            <option value="TPA">TPA</option>
-                            <option value="Matematika">Matematika</option>
-                            <option value="IPA">IPA</option>
-                            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-                            <option value="Bahasa Inggris">Bahasa Inggris</option>
-                        </select>
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px; font-weight: 500;">Jumlah</label>
-                        <input type="number" id="geminiJumlah" value="10" min="1" style="width: 100%; background: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; font-family: 'Inter', sans-serif; outline: none;" placeholder="Jml">
-                    </div>
-                </div>
-                <button type="button" id="btnSalinPrompt" class="btn btn-primary" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;">
-                    <i data-lucide="copy" style="width: 18px; height: 18px;"></i> Salin Prompt & Buka Gemini
-                </button>
-            </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" onclick="switchAdminMenu('dashboard', this)">
+                <i data-lucide="layout-dashboard"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" onclick="switchAdminMenu('bank', this)">
+                <i data-lucide="database"></i> Bank Soal
+            </a>
+            <a href="#" class="nav-item" onclick="switchAdminMenu('ai', this)">
+                <i data-lucide="bot"></i> AI Generator
+            </a>
+            <a href="#" class="nav-item" onclick="switchAdminMenu('pengaturan', this)">
+                <i data-lucide="settings"></i> Pengaturan
+            </a>
+        </nav>
 
-            <!-- Langkah 2 -->
-            <div class="stat-card" style="flex-direction: column; align-items: flex-start; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                    <div style="background: rgba(34, 197, 94, 0.1); color: #22c55e; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
-                    <h3 style="margin: 0; font-size: 1.1rem; color:#1e293b; font-family: 'Outfit', sans-serif;">Import JSON</h3>
+        <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <a href="{{ route('exam.index') }}" class="btn btn-outline" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 500;">
+                <i data-lucide="external-link" style="width: 18px; height: 18px;"></i> Buka Aplikasi Ujian
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content-area">
+        
+        <!-- SECTION: DASHBOARD -->
+        <section id="menu-dashboard" class="admin-section active">
+            <div class="admin-header">
+                <div>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 5px;">Pantau Peserta Ujian</h2>
+                    <p style="color: #94a3b8; margin: 0; font-size: 1.05rem;">Lihat status dan hasil dari peserta CBT secara real-time.</p>
                 </div>
-                <p style="color:#64748b; font-size:0.9rem; margin-bottom: 20px; line-height: 1.5;">Paste kode JSON balasan dari Gemini ke kotak di bawah ini. Sistem akan otomatis memvalidasi dan memindahkannya ke bank soal.</p>
-                <form action="{{ route('admin.import.gemini') }}" method="POST" style="width: 100%;">
-                    @csrf
-                    <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px; font-weight: 500;">Format JSON Array Mentah</label>
-                    <textarea name="json_data" rows="3" placeholder="Paste JSON array di sini..." style="width: 100%; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; padding: 10px; margin-bottom: 15px; font-family: monospace; outline: none; resize: vertical;" required></textarea>
-                    <button type="submit" class="btn btn-outline" style="width: 100%; border-color: #22c55e; color: #22c55e; display: flex; justify-content: center; align-items: center; gap: 8px;">
-                        <i data-lucide="download-cloud" style="width: 18px; height: 18px;"></i> Import Soal ke Database
+                <div>
+                    <button onclick="window.location.reload()" class="btn btn-primary" style="padding: 12px 24px; display: flex; align-items: center; gap: 8px; font-weight: 500;">
+                        <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i> Segarkan Data
                     </button>
-                </form>
-            </div>
-        </div>
-
-        </div>
-
-        <div class="admin-header" style="margin-top: 40px; margin-bottom: 20px;">
-            <div>
-                <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 5px;">Daftar Soal Tersimpan</h2>
-                <p style="color: #94a3b8; margin: 0;">Total {{ $questions->count() }} soal di dalam bank soal saat ini.</p>
-            </div>
-        </div>
-
-        @php
-            $groupedQuestions = $questions->groupBy('mapel');
-        @endphp
-
-        @if($questions->count() > 0)
-            <div class="admin-tabs">
-                <button class="admin-tab-btn active" onclick="openAdminTab('semua', this)">
-                    Semua ({{ $questions->count() }})
-                </button>
-                @foreach($groupedQuestions as $mapel => $qs)
-                    <button class="admin-tab-btn" onclick="openAdminTab('{{ Str::slug($mapel) }}', this)">
-                        {{ $mapel }} ({{ $qs->count() }})
-                    </button>
-                @endforeach
+                </div>
             </div>
 
-            <!-- Tab Semua -->
-            <div id="tab-semua" class="admin-tab-pane active">
-                <div class="table-container" style="max-height: 600px; overflow-y: auto; margin-bottom: 40px;">
-                    <table>
-                        <thead style="position: sticky; top: 0; z-index: 10; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
+            @php
+                $total = $participants->count();
+                $selesai = $participants->where('status', 'selesai')->count();
+                $mengerjakan = $participants->where('status', 'mengerjakan')->count();
+                $avgScore = $selesai > 0 ? $participants->where('status', 'selesai')->avg('score') : 0;
+            @endphp
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ $total }}</h3>
+                        <p>Total Peserta</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(234, 179, 8, 0.1); color: #eab308;">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ $mengerjakan }}</h3>
+                        <p>Sedang Mengerjakan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ $selesai }}</h3>
+                        <p>Selesai Ujian</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+                        <i data-lucide="award"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ number_format($avgScore, 1) }}</h3>
+                        <p>Rata-rata Nilai</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Waktu Mulai</th>
+                            <th>Nama Peserta & NIM</th>
+                            <th>Status</th>
+                            <th>Nilai Rata-rata</th>
+                            <th>Detail Per Tab (Nilai & Waktu)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($participants as $p)
                             <tr>
-                                <th>Kategori</th>
-                                <th>Soal</th>
-                                <th>Pilihan</th>
-                                <th>Kunci</th>
-                                <th>Tingkat</th>
+                                <td style="color: #94a3b8; font-size: 0.9rem;">{{ $p->created_at->format('d M Y, H:i') }}</td>
+                                <td>
+                                    <div style="font-weight: 500; font-size: 1.05rem;">{{ $p->name }}</div>
+                                    <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 2px;">{{ $p->nim ?? '-' }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge-status status-{{ $p->status }}">
+                                        {{ ucfirst($p->status) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($p->status == 'selesai' || ($p->tab_results && count($p->tab_results) > 0))
+                                        <span style="font-weight: 700; font-family: 'Outfit', sans-serif; font-size: 1.2rem; color: #f8fafc;">{{ $p->score }}</span>
+                                    @else
+                                        <span style="color: #64748b;">-</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($p->tab_results && is_array($p->tab_results))
+                                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                                            @foreach($p->tab_results as $mapel => $res)
+                                                <div style="font-size: 0.85rem; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05);">
+                                                    <span style="font-weight: 500; color: #e2e8f0;">{{ $mapel }}</span>
+                                                    <span>
+                                                        <span style="color: #3b82f6; font-weight: bold; margin-right: 12px;">{{ $res['score'] }}</span>
+                                                        <span style="color: #94a3b8; display: inline-flex; align-items: center; gap: 4px;">
+                                                            <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
+                                                            {{ floor($res['time_taken_seconds'] / 60) }}m {{ $res['time_taken_seconds'] % 60 }}s
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <span style="color: #64748b; font-size: 0.85rem;">Belum ada data</span>
+                                    @endif
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($questions as $q)
-                                <tr>
-                                    <td style="vertical-align: top; width: 100px;">
-                                        <div style="font-weight: 500; margin-bottom: 6px; color: #f8fafc;">{{ $q->mapel }}</div>
-                                        <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
-                                    </td>
-                                    <td style="vertical-align: top;">
-                                        <div style="max-height: 150px; max-width: 450px; overflow-y: auto; font-size: 0.9rem; color: #e2e8f0; line-height: 1.6; padding-right: 10px;">
-                                            {!! nl2br(e($q->soal)) !!}
-                                        </div>
-                                    </td>
-                                    <td style="vertical-align: top;">
-                                        <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 0.85rem; color: #94a3b8; display: flex; flex-direction: column; gap: 4px;">
-                                            <li><strong style="color: #cbd5e1;">A:</strong> {{ Str::limit($q->pilihan_a, 50) }}</li>
-                                            <li><strong style="color: #cbd5e1;">B:</strong> {{ Str::limit($q->pilihan_b, 50) }}</li>
-                                            <li><strong style="color: #cbd5e1;">C:</strong> {{ Str::limit($q->pilihan_c, 50) }}</li>
-                                            <li><strong style="color: #cbd5e1;">D:</strong> {{ Str::limit($q->pilihan_d, 50) }}</li>
-                                        </ul>
-                                    </td>
-                                    <td style="vertical-align: top; width: 80px;">
-                                        <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; color: #22c55e; font-weight: bold; font-size: 1.1rem;">
-                                            {{ $q->jawaban }}
-                                        </div>
-                                    </td>
-                                    <td style="vertical-align: top; width: 100px;">
-                                        <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 60px 40px; color: #94a3b8;">
+                                    <i data-lucide="inbox" style="width: 54px; height: 54px; margin-bottom: 15px; opacity: 0.3;"></i>
+                                    <p style="font-size: 1.1rem;">Belum ada peserta yang mendaftar ujian.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION: BANK SOAL -->
+        <section id="menu-bank" class="admin-section">
+            <div class="admin-header">
+                <div>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 5px;">Bank Soal Tersimpan</h2>
+                    <p style="color: #94a3b8; margin: 0; font-size: 1.05rem;">Total {{ $questions->count() }} soal di dalam bank soal saat ini.</p>
                 </div>
             </div>
 
-            <!-- Tab Per Mata Pelajaran -->
-            @foreach($groupedQuestions as $mapel => $qs)
-                <div id="tab-{{ Str::slug($mapel) }}" class="admin-tab-pane">
-                    <div class="table-container" style="max-height: 600px; overflow-y: auto; margin-bottom: 40px;">
+            @php
+                $groupedQuestions = $questions->groupBy('mapel');
+            @endphp
+
+            @if($questions->count() > 0)
+                <div class="admin-tabs">
+                    <button class="admin-tab-btn active" onclick="openAdminTab('semua', this)">
+                        Semua ({{ $questions->count() }})
+                    </button>
+                    @foreach($groupedQuestions as $mapel => $qs)
+                        <button class="admin-tab-btn" onclick="openAdminTab('{{ Str::slug($mapel) }}', this)">
+                            {{ $mapel }} ({{ $qs->count() }})
+                        </button>
+                    @endforeach
+                </div>
+
+                <!-- Tab Semua -->
+                <div id="tab-semua" class="admin-tab-pane active">
+                    <div class="table-container" style="max-height: 600px; overflow-y: auto;">
                         <table>
                             <thead style="position: sticky; top: 0; z-index: 10; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
                                 <tr>
@@ -434,26 +431,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($qs as $q)
+                                @foreach($questions as $q)
                                     <tr>
-                                        <td style="vertical-align: top; width: 100px;">
+                                        <td style="vertical-align: top; width: 120px;">
+                                            <div style="font-weight: 600; margin-bottom: 8px; color: #f8fafc; font-size: 0.95rem;">{{ $q->mapel }}</div>
                                             <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
                                         </td>
                                         <td style="vertical-align: top;">
-                                            <div style="max-height: 150px; max-width: 450px; overflow-y: auto; font-size: 0.9rem; color: #e2e8f0; line-height: 1.6; padding-right: 10px;">
+                                            <div style="max-height: 150px; max-width: 500px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
                                                 {!! nl2br(e($q->soal)) !!}
                                             </div>
                                         </td>
                                         <td style="vertical-align: top;">
-                                            <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 0.85rem; color: #94a3b8; display: flex; flex-direction: column; gap: 4px;">
-                                                <li><strong style="color: #cbd5e1;">A:</strong> {{ Str::limit($q->pilihan_a, 50) }}</li>
-                                                <li><strong style="color: #cbd5e1;">B:</strong> {{ Str::limit($q->pilihan_b, 50) }}</li>
-                                                <li><strong style="color: #cbd5e1;">C:</strong> {{ Str::limit($q->pilihan_c, 50) }}</li>
-                                                <li><strong style="color: #cbd5e1;">D:</strong> {{ Str::limit($q->pilihan_d, 50) }}</li>
+                                            <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 0.9rem; color: #94a3b8; display: flex; flex-direction: column; gap: 6px;">
+                                                <li><strong style="color: #cbd5e1;">A:</strong> {{ Str::limit($q->pilihan_a, 60) }}</li>
+                                                <li><strong style="color: #cbd5e1;">B:</strong> {{ Str::limit($q->pilihan_b, 60) }}</li>
+                                                <li><strong style="color: #cbd5e1;">C:</strong> {{ Str::limit($q->pilihan_c, 60) }}</li>
+                                                <li><strong style="color: #cbd5e1;">D:</strong> {{ Str::limit($q->pilihan_d, 60) }}</li>
                                             </ul>
                                         </td>
                                         <td style="vertical-align: top; width: 80px;">
-                                            <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; color: #22c55e; font-weight: bold; font-size: 1.1rem;">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 10px; color: #22c55e; font-weight: bold; font-size: 1.2rem;">
                                                 {{ $q->jawaban }}
                                             </div>
                                         </td>
@@ -466,15 +464,150 @@
                         </table>
                     </div>
                 </div>
-            @endforeach
-        @else
-            <div class="table-container" style="margin-bottom: 40px;">
-                <div style="text-align: center; padding: 60px 40px; color: #94a3b8;">
-                    <i data-lucide="database" style="width: 48px; height: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
-                    <p style="font-size: 1.1rem;">Bank soal masih kosong.</p>
+
+                <!-- Tab Per Mata Pelajaran -->
+                @foreach($groupedQuestions as $mapel => $qs)
+                    <div id="tab-{{ Str::slug($mapel) }}" class="admin-tab-pane">
+                        <div class="table-container" style="max-height: 600px; overflow-y: auto;">
+                            <table>
+                                <thead style="position: sticky; top: 0; z-index: 10; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
+                                    <tr>
+                                        <th>Kategori</th>
+                                        <th>Soal</th>
+                                        <th>Pilihan</th>
+                                        <th>Kunci</th>
+                                        <th>Tingkat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($qs as $q)
+                                        <tr>
+                                            <td style="vertical-align: top; width: 120px;">
+                                                <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
+                                            </td>
+                                            <td style="vertical-align: top;">
+                                                <div style="max-height: 150px; max-width: 500px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
+                                                    {!! nl2br(e($q->soal)) !!}
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align: top;">
+                                                <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 0.9rem; color: #94a3b8; display: flex; flex-direction: column; gap: 6px;">
+                                                    <li><strong style="color: #cbd5e1;">A:</strong> {{ Str::limit($q->pilihan_a, 60) }}</li>
+                                                    <li><strong style="color: #cbd5e1;">B:</strong> {{ Str::limit($q->pilihan_b, 60) }}</li>
+                                                    <li><strong style="color: #cbd5e1;">C:</strong> {{ Str::limit($q->pilihan_c, 60) }}</li>
+                                                    <li><strong style="color: #cbd5e1;">D:</strong> {{ Str::limit($q->pilihan_d, 60) }}</li>
+                                                </ul>
+                                            </td>
+                                            <td style="vertical-align: top; width: 80px;">
+                                                <div style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 10px; color: #22c55e; font-weight: bold; font-size: 1.2rem;">
+                                                    {{ $q->jawaban }}
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align: top; width: 100px;">
+                                                <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="table-container" style="margin-bottom: 40px;">
+                    <div style="text-align: center; padding: 80px 40px; color: #94a3b8;">
+                        <i data-lucide="database" style="width: 64px; height: 64px; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <p style="font-size: 1.2rem;">Bank soal masih kosong.</p>
+                    </div>
+                </div>
+            @endif
+        </section>
+
+        <!-- SECTION: AI GENERATOR -->
+        <section id="menu-ai" class="admin-section">
+            <div class="admin-header">
+                <div>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 5px;">AI Question Generator (Manual)</h2>
+                    <p style="color: #94a3b8; margin: 0; font-size: 1.05rem;">Tambah soal otomatis tanpa bentrok dengan soal yang sudah ada.</p>
                 </div>
             </div>
-        @endif
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <!-- Langkah 1 -->
+                <div class="stat-card" style="flex-direction: column; align-items: flex-start; padding: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem;">1</div>
+                        <h3 style="margin: 0; font-size: 1.3rem; color: #f8fafc; font-family: 'Outfit', sans-serif;">Generate Prompt</h3>
+                    </div>
+                    <p style="color:#94a3b8; font-size:0.95rem; margin-bottom: 25px; line-height: 1.6;">Pilih mata pelajaran dan jumlah soal. Sistem akan membuat instruksi (prompt) yang menyertakan soal lama agar AI tidak membuat soal yang redundan.</p>
+                    
+                    <div style="display: flex; gap: 20px; width: 100%; margin-bottom: 20px;">
+                        <div style="flex: 2;">
+                            <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 500;">Mata Pelajaran</label>
+                            <select id="geminiMapel" style="width: 100%; background: rgba(15, 23, 42, 0.5); color: #f8fafc; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                                <option value="TPA">TPA</option>
+                                <option value="Matematika">Matematika</option>
+                                <option value="IPA">IPA</option>
+                                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 500;">Jumlah</label>
+                            <input type="number" id="geminiJumlah" value="10" min="1" style="width: 100%; background: rgba(15, 23, 42, 0.5); color: #f8fafc; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; font-family: 'Inter', sans-serif; outline: none;" placeholder="Jml">
+                        </div>
+                    </div>
+                    <button type="button" id="btnSalinPrompt" class="btn btn-primary" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; font-weight: 600;">
+                        <i data-lucide="copy" style="width: 20px; height: 20px;"></i> Salin Prompt & Buka Gemini
+                    </button>
+                </div>
+
+                <!-- Langkah 2 -->
+                <div class="stat-card" style="flex-direction: column; align-items: flex-start; padding: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="background: rgba(34, 197, 94, 0.15); color: #22c55e; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem;">2</div>
+                        <h3 style="margin: 0; font-size: 1.3rem; color: #f8fafc; font-family: 'Outfit', sans-serif;">Import JSON</h3>
+                    </div>
+                    <p style="color:#94a3b8; font-size:0.95rem; margin-bottom: 25px; line-height: 1.6;">Paste kode JSON balasan dari Gemini ke kotak di bawah ini. Sistem akan otomatis memvalidasi dan memindahkannya ke bank soal.</p>
+                    <form action="{{ route('admin.import.gemini') }}" method="POST" style="width: 100%;">
+                        @csrf
+                        <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 500;">Format JSON Array Mentah</label>
+                        <textarea name="json_data" rows="4" placeholder="Paste JSON array di sini..." style="width: 100%; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f8fafc; padding: 12px; margin-bottom: 20px; font-family: monospace; outline: none; resize: vertical;" required></textarea>
+                        <button type="submit" class="btn btn-outline" style="width: 100%; border-color: #22c55e; color: #22c55e; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; font-weight: 600;">
+                            <i data-lucide="download-cloud" style="width: 20px; height: 20px;"></i> Import Soal ke Database
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: PENGATURAN -->
+        <section id="menu-pengaturan" class="admin-section">
+            <div class="admin-header">
+                <div>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 5px;">Pengaturan Ujian</h2>
+                    <p style="color: #94a3b8; margin: 0; font-size: 1.05rem;">Konfigurasi fitur dan tampilan di aplikasi ujian CBT peserta.</p>
+                </div>
+            </div>
+
+            <div class="stat-card" style="flex-direction: row; justify-content: space-between; max-width: 700px; padding: 30px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 64px; height: 64px; border-radius: 16px;">
+                        <i data-lucide="{{ ($settings['show_kunci_jawaban'] ?? true) ? 'eye' : 'eye-off' }}" style="width: 28px; height: 28px;"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.3rem; color: #f8fafc; font-family: 'Outfit', sans-serif; margin: 0 0 8px 0;">Kunci Jawaban Ujian</h3>
+                        <p style="color: #94a3b8; font-size: 0.95rem; margin: 0; max-width: 350px;">Izinkan sistem untuk menampilkan hasil dan kunci jawaban yang benar setelah peserta menyelesaikan ujian.</p>
+                    </div>
+                </div>
+                <form action="{{ route('admin.settings.toggle') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn {{ ($settings['show_kunci_jawaban'] ?? true) ? 'btn-outline' : 'btn-primary' }}" style="padding: 12px 24px; font-weight: 600; border-color: #ef4444; color: {{ ($settings['show_kunci_jawaban'] ?? true) ? '#ef4444' : '#fff' }}; background: {{ ($settings['show_kunci_jawaban'] ?? true) ? 'transparent' : '#ef4444' }};">
+                        {{ ($settings['show_kunci_jawaban'] ?? true) ? 'Sembunyikan Kunci' : 'Tampilkan Kunci' }}
+                    </button>
+                </form>
+            </div>
+        </section>
 
     </main>
 </div>
@@ -489,7 +622,55 @@
 
 <script>
     lucide.createIcons();
+
+    // Menu Navigation
+    function switchAdminMenu(menuId, btn) {
+        document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('menu-' + menuId).classList.add('active');
+        btn.classList.add('active');
+        localStorage.setItem('activeAdminMenu', menuId);
+    }
+
+    // Bank Soal Tabs Navigation
+    function openAdminTab(tabId, btn) {
+        document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        btn.classList.add('active');
+        localStorage.setItem('activeAdminTab', tabId);
+    }
     
+    // Restore active menu & tab after reload
+    document.addEventListener('DOMContentLoaded', () => {
+        // Menu
+        let activeMenu = localStorage.getItem('activeAdminMenu');
+        if (activeMenu) {
+            let section = document.getElementById('menu-' + activeMenu);
+            let btn = document.querySelector(`.nav-item[onclick*="switchAdminMenu('${activeMenu}'"]`);
+            if (section && btn) {
+                document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                section.classList.add('active');
+                btn.classList.add('active');
+            }
+        }
+
+        // Tabs
+        let activeTab = localStorage.getItem('activeAdminTab');
+        if (activeTab) {
+            let pane = document.getElementById('tab-' + activeTab);
+            let btn = document.querySelector(`.admin-tab-btn[onclick*="openAdminTab('${activeTab}'"]`);
+            if (pane && btn) {
+                document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
+                pane.classList.add('active');
+                btn.classList.add('active');
+            }
+        }
+    });
+
+    // Generate AI Prompt
     document.getElementById('btnSalinPrompt').addEventListener('click', function() {
         let btn = this;
         let mapel = document.getElementById('geminiMapel').value;
@@ -527,32 +708,10 @@
         });
     });
 
-    function openAdminTab(tabId, btn) {
-        document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + tabId).classList.add('active');
-        btn.classList.add('active');
-        localStorage.setItem('activeAdminTab', tabId);
-    }
-    
-    // Restore active tab after reload
-    document.addEventListener('DOMContentLoaded', () => {
-        let activeTab = localStorage.getItem('activeAdminTab');
-        if (activeTab) {
-            let pane = document.getElementById('tab-' + activeTab);
-            let btn = document.querySelector(`.admin-tab-btn[onclick*="${activeTab}"]`);
-            if (pane && btn) {
-                document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
-                pane.classList.add('active');
-                btn.classList.add('active');
-            }
-        }
-    });
-
-    // Auto refresh every 30 seconds
+    // Auto refresh every 30 seconds ONLY when on Dashboard menu
     setTimeout(function() {
-        if(!document.activeElement || document.activeElement.tagName !== 'TEXTAREA') {
+        let dashboardSection = document.getElementById('menu-dashboard');
+        if(dashboardSection && dashboardSection.classList.contains('active')) {
             window.location.reload();
         }
     }, 30000);
