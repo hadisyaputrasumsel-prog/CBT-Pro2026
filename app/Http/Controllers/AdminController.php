@@ -93,4 +93,17 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', "Berhasil mengimpor $imported soal baru dari Gemini!");
     }
+
+    public function updateQuestion(Request $request, $id)
+    {
+        $q = Question::findOrFail($id);
+        $q->update($request->all());
+        return redirect()->back()->with('success', 'Soal berhasil diperbarui!');
+    }
+
+    public function deleteQuestion($id)
+    {
+        Question::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Soal berhasil dihapus!');
+    }
 }

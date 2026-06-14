@@ -15,3 +15,5 @@ Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.d
 Route::post('/admin/settings/toggle-kunci', [AdminController::class, 'toggleKunciJawaban'])->name('admin.settings.toggle');
 Route::post('/admin/gemini-prompt', [AdminController::class, 'getGeminiPrompt'])->name('admin.gemini.prompt');
 Route::post('/admin/import-gemini', [AdminController::class, 'importGeminiJson'])->name('admin.import.gemini');
+Route::put('/admin/question/{id}', [AdminController::class, 'updateQuestion'])->name('admin.question.update');
+Route::delete('/admin/question/{id}', [AdminController::class, 'deleteQuestion'])->name('admin.question.delete');

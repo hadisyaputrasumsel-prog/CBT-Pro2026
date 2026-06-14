@@ -230,6 +230,107 @@
         .admin-tab-pane.active {
             display: block;
         }
+
+        /* Modal CSS */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .modal-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: #ef4444;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #3b82f6;
+        }
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+        .btn-edit:hover { background: #3b82f6; color: #fff; }
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+        .btn-delete:hover { background: #ef4444; color: #fff; }
     </style>
 </head>
 <body>
@@ -428,6 +529,7 @@
                                     <th>Pilihan</th>
                                     <th>Kunci</th>
                                     <th>Tingkat</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -458,6 +560,20 @@
                                         <td style="vertical-align: top; width: 100px;">
                                             <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
                                         </td>
+                                        <td style="vertical-align: top; width: 100px;">
+                                            <div style="display: flex; gap: 8px;">
+                                                <button type="button" class="btn-icon btn-edit" onclick="openEditModal({{ json_encode($q) }})" title="Edit Soal">
+                                                    <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
+                                                </button>
+                                                <form action="{{ route('admin.question.delete', $q->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus soal ini secara permanen?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn-icon btn-delete" title="Hapus Soal">
+                                                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -477,6 +593,7 @@
                                         <th>Pilihan</th>
                                         <th>Kunci</th>
                                         <th>Tingkat</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -505,6 +622,20 @@
                                             </td>
                                             <td style="vertical-align: top; width: 100px;">
                                                 <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
+                                            </td>
+                                            <td style="vertical-align: top; width: 100px;">
+                                                <div style="display: flex; gap: 8px;">
+                                                    <button type="button" class="btn-icon btn-edit" onclick="openEditModal({{ json_encode($q) }})" title="Edit Soal">
+                                                        <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
+                                                    </button>
+                                                    <form action="{{ route('admin.question.delete', $q->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus soal ini secara permanen?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn-icon btn-delete" title="Hapus Soal">
+                                                            <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -609,6 +740,77 @@
             </div>
         </section>
 
+        <!-- Modal Edit Soal -->
+        <div id="editModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Soal</h3>
+                    <button type="button" class="modal-close" onclick="closeEditModal()">
+                        <i data-lucide="x" style="width: 24px; height: 24px;"></i>
+                    </button>
+                </div>
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Mata Pelajaran</label>
+                            <input type="text" name="mapel" id="edit-mapel" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Kategori</label>
+                            <input type="text" name="kategori" id="edit-kategori" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tingkat Kesulitan</label>
+                            <select name="tingkat_kesulitan" id="edit-tingkat" class="form-control" required>
+                                <option value="Mudah">Mudah</option>
+                                <option value="Sedang">Sedang</option>
+                                <option value="Sulit">Sulit</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kunci Jawaban</label>
+                            <select name="jawaban" id="edit-jawaban" class="form-control" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teks Soal</label>
+                        <textarea name="soal" id="edit-soal" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pilihan A</label>
+                        <input type="text" name="pilihan_a" id="edit-a" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pilihan B</label>
+                        <input type="text" name="pilihan_b" id="edit-b" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pilihan C</label>
+                        <input type="text" name="pilihan_c" id="edit-c" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pilihan D</label>
+                        <input type="text" name="pilihan_d" id="edit-d" class="form-control" required>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                        <button type="button" class="btn btn-outline" onclick="closeEditModal()">Batal</button>
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </main>
 </div>
 
@@ -622,6 +824,30 @@
 
 <script>
     lucide.createIcons();
+
+    // Edit Modal Functions
+    function openEditModal(question) {
+        document.getElementById('editModal').classList.add('active');
+        document.getElementById('editForm').action = `/admin/question/${question.id}`;
+        
+        document.getElementById('edit-mapel').value = question.mapel || '';
+        document.getElementById('edit-kategori').value = question.kategori || '';
+        document.getElementById('edit-tingkat').value = question.tingkat_kesulitan || 'Sedang';
+        document.getElementById('edit-jawaban').value = question.jawaban || 'A';
+        document.getElementById('edit-soal').value = question.soal || '';
+        document.getElementById('edit-a').value = question.pilihan_a || '';
+        document.getElementById('edit-b').value = question.pilihan_b || '';
+        document.getElementById('edit-c').value = question.pilihan_c || '';
+        document.getElementById('edit-d').value = question.pilihan_d || '';
+        
+        window.isModalOpen = true;
+        lucide.createIcons();
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+        window.isModalOpen = false;
+    }
 
     // Menu Navigation
     function switchAdminMenu(menuId, btn) {
@@ -711,7 +937,7 @@
     // Auto refresh every 30 seconds ONLY when on Dashboard menu
     setTimeout(function() {
         let dashboardSection = document.getElementById('menu-dashboard');
-        if(dashboardSection && dashboardSection.classList.contains('active')) {
+        if(dashboardSection && dashboardSection.classList.contains('active') && !window.isModalOpen) {
             window.location.reload();
         }
     }, 30000);
