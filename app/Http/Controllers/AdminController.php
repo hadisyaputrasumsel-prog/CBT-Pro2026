@@ -106,4 +106,14 @@ class AdminController extends Controller
         Question::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Soal berhasil dihapus!');
     }
+
+    public function bulkDeleteQuestions(Request $request)
+    {
+        $ids = json_decode($request->input('ids', '[]'), true);
+        if (is_array($ids) && count($ids) > 0) {
+            Question::whereIn('id', $ids)->delete();
+            return redirect()->back()->with('success', count($ids) . ' soal berhasil dihapus!');
+        }
+        return redirect()->back()->with('error', 'Tidak ada soal yang dipilih untuk dihapus.');
+    }
 }

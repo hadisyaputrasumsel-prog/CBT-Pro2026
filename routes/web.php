@@ -17,3 +17,4 @@ Route::post('/admin/gemini-prompt', [AdminController::class, 'getGeminiPrompt'])
 Route::post('/admin/import-gemini', [AdminController::class, 'importGeminiJson'])->name('admin.import.gemini');
 Route::put('/admin/question/{id}', [AdminController::class, 'updateQuestion'])->name('admin.question.update');
 Route::delete('/admin/question/{id}', [AdminController::class, 'deleteQuestion'])->name('admin.question.delete');
+Route::delete('/admin/questions/bulk', [AdminController::class, 'bulkDeleteQuestions'])->name('admin.questions.bulk_delete');

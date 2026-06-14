@@ -500,6 +500,11 @@
                     <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 5px;">Bank Soal Tersimpan</h2>
                     <p style="color: #94a3b8; margin: 0; font-size: 1.05rem;">Total {{ $questions->count() }} soal di dalam bank soal saat ini.</p>
                 </div>
+                <div>
+                    <button type="button" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444; padding: 12px 24px; font-weight: 500; display: flex; align-items: center; gap: 8px;" onclick="deleteSelectedQuestions()">
+                        <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i> Hapus Terpilih
+                    </button>
+                </div>
             </div>
 
             @php
@@ -524,6 +529,7 @@
                         <table>
                             <thead style="position: sticky; top: 0; z-index: 10; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
                                 <tr>
+                                    <th style="width: 40px; text-align: center;"><input type="checkbox" onclick="toggleAllCheckboxes(this)"></th>
                                     <th>Kategori</th>
                                     <th>Soal</th>
                                     <th>Pilihan</th>
@@ -535,6 +541,9 @@
                             <tbody>
                                 @foreach($questions as $q)
                                     <tr>
+                                        <td style="vertical-align: top; text-align: center;">
+                                            <input type="checkbox" class="cb-question" value="{{ $q->id }}">
+                                        </td>
                                         <td style="vertical-align: top; width: 120px;">
                                             <div style="font-weight: 600; margin-bottom: 8px; color: #f8fafc; font-size: 0.95rem;">{{ $q->mapel }}</div>
                                             <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
@@ -588,6 +597,7 @@
                             <table>
                                 <thead style="position: sticky; top: 0; z-index: 10; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
                                     <tr>
+                                        <th style="width: 40px; text-align: center;"><input type="checkbox" onclick="toggleAllCheckboxes(this)"></th>
                                         <th>Kategori</th>
                                         <th>Soal</th>
                                         <th>Pilihan</th>
@@ -599,6 +609,9 @@
                                 <tbody>
                                     @foreach($qs as $q)
                                         <tr>
+                                            <td style="vertical-align: top; text-align: center;">
+                                                <input type="checkbox" class="cb-question" value="{{ $q->id }}">
+                                            </td>
                                             <td style="vertical-align: top; width: 120px;">
                                                 <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
                                             </td>
@@ -847,6 +860,53 @@
     function closeEditModal() {
         document.getElementById('editModal').classList.remove('active');
         window.isModalOpen = false;
+    }
+
+    // Bulk Delete Functions
+    function toggleAllCheckboxes(masterCheckbox) {
+        let table = masterCheckbox.closest('table');
+        let checkboxes = table.querySelectorAll('.cb-question');
+        checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+    }
+
+    function deleteSelectedQuestions() {
+        let checkboxes = document.querySelectorAll('.cb-question:checked');
+        let ids = [];
+        checkboxes.forEach(cb => {
+            if(!ids.includes(cb.value)) ids.push(cb.value);
+        });
+
+        if(ids.length === 0) {
+            alert('Silakan pilih minimal satu soal untuk dihapus!');
+            return;
+        }
+
+        if(confirm(`Apakah Anda yakin ingin menghapus ${ids.length} soal yang dipilih secara permanen?`)) {
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route('admin.questions.bulk_delete') }}';
+
+            let csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            form.appendChild(csrfInput);
+
+            let methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'DELETE';
+            form.appendChild(methodInput);
+
+            let idsInput = document.createElement('input');
+            idsInput.type = 'hidden';
+            idsInput.name = 'ids';
+            idsInput.value = JSON.stringify(ids);
+            form.appendChild(idsInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
     }
 
     // Menu Navigation
