@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         .admin-header {
             display: flex;
@@ -96,6 +97,48 @@
             background: rgba(34, 197, 94, 0.1);
             color: #22c55e;
             border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .admin-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+        .admin-tabs::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        .admin-tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        .admin-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+        .admin-tab-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .admin-tab-pane {
+            display: none;
+        }
+        .admin-tab-pane.active {
+            display: block;
         }
     </style>
 </head>
@@ -303,6 +346,136 @@
             </div>
         </div>
 
+        </div>
+
+        <div class="admin-header" style="margin-top: 40px; margin-bottom: 20px;">
+            <div>
+                <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 5px;">Daftar Soal Tersimpan</h2>
+                <p style="color: #94a3b8; margin: 0;">Total {{ $questions->count() }} soal di dalam bank soal saat ini.</p>
+            </div>
+        </div>
+
+        @php
+            $groupedQuestions = $questions->groupBy('mapel');
+        @endphp
+
+        @if($questions->count() > 0)
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" onclick="openAdminTab('semua', this)">
+                    Semua ({{ $questions->count() }})
+                </button>
+                @foreach($groupedQuestions as $mapel => $qs)
+                    <button class="admin-tab-btn" onclick="openAdminTab('{{ Str::slug($mapel) }}', this)">
+                        {{ $mapel }} ({{ $qs->count() }})
+                    </button>
+                @endforeach
+            </div>
+
+            <!-- Tab Semua -->
+            <div id="tab-semua" class="admin-tab-pane active">
+                <div class="table-container" style="max-height: 600px; overflow-y: auto; margin-bottom: 40px;">
+                    <table>
+                        <thead style="position: sticky; top: 0; z-index: 10; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Soal</th>
+                                <th>Pilihan</th>
+                                <th>Kunci</th>
+                                <th>Tingkat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($questions as $q)
+                                <tr>
+                                    <td style="vertical-align: top; width: 100px;">
+                                        <div style="font-weight: 500; margin-bottom: 6px; color: #f8fafc;">{{ $q->mapel }}</div>
+                                        <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <div style="max-height: 150px; max-width: 450px; overflow-y: auto; font-size: 0.9rem; color: #e2e8f0; line-height: 1.6; padding-right: 10px;">
+                                            {!! nl2br(e($q->soal)) !!}
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 0.85rem; color: #94a3b8; display: flex; flex-direction: column; gap: 4px;">
+                                            <li><strong style="color: #cbd5e1;">A:</strong> {{ Str::limit($q->pilihan_a, 50) }}</li>
+                                            <li><strong style="color: #cbd5e1;">B:</strong> {{ Str::limit($q->pilihan_b, 50) }}</li>
+                                            <li><strong style="color: #cbd5e1;">C:</strong> {{ Str::limit($q->pilihan_c, 50) }}</li>
+                                            <li><strong style="color: #cbd5e1;">D:</strong> {{ Str::limit($q->pilihan_d, 50) }}</li>
+                                        </ul>
+                                    </td>
+                                    <td style="vertical-align: top; width: 80px;">
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; color: #22c55e; font-weight: bold; font-size: 1.1rem;">
+                                            {{ $q->jawaban }}
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: top; width: 100px;">
+                                        <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Per Mata Pelajaran -->
+            @foreach($groupedQuestions as $mapel => $qs)
+                <div id="tab-{{ Str::slug($mapel) }}" class="admin-tab-pane">
+                    <div class="table-container" style="max-height: 600px; overflow-y: auto; margin-bottom: 40px;">
+                        <table>
+                            <thead style="position: sticky; top: 0; z-index: 10; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th>Soal</th>
+                                    <th>Pilihan</th>
+                                    <th>Kunci</th>
+                                    <th>Tingkat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($qs as $q)
+                                    <tr>
+                                        <td style="vertical-align: top; width: 100px;">
+                                            <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
+                                        </td>
+                                        <td style="vertical-align: top;">
+                                            <div style="max-height: 150px; max-width: 450px; overflow-y: auto; font-size: 0.9rem; color: #e2e8f0; line-height: 1.6; padding-right: 10px;">
+                                                {!! nl2br(e($q->soal)) !!}
+                                            </div>
+                                        </td>
+                                        <td style="vertical-align: top;">
+                                            <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 0.85rem; color: #94a3b8; display: flex; flex-direction: column; gap: 4px;">
+                                                <li><strong style="color: #cbd5e1;">A:</strong> {{ Str::limit($q->pilihan_a, 50) }}</li>
+                                                <li><strong style="color: #cbd5e1;">B:</strong> {{ Str::limit($q->pilihan_b, 50) }}</li>
+                                                <li><strong style="color: #cbd5e1;">C:</strong> {{ Str::limit($q->pilihan_c, 50) }}</li>
+                                                <li><strong style="color: #cbd5e1;">D:</strong> {{ Str::limit($q->pilihan_d, 50) }}</li>
+                                            </ul>
+                                        </td>
+                                        <td style="vertical-align: top; width: 80px;">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; color: #22c55e; font-weight: bold; font-size: 1.1rem;">
+                                                {{ $q->jawaban }}
+                                            </div>
+                                        </td>
+                                        <td style="vertical-align: top; width: 100px;">
+                                            <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="table-container" style="margin-bottom: 40px;">
+                <div style="text-align: center; padding: 60px 40px; color: #94a3b8;">
+                    <i data-lucide="database" style="width: 48px; height: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                    <p style="font-size: 1.1rem;">Bank soal masih kosong.</p>
+                </div>
+            </div>
+        @endif
+
     </main>
 </div>
 
@@ -352,6 +525,29 @@
                 lucide.createIcons();
             });
         });
+    });
+
+    function openAdminTab(tabId, btn) {
+        document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        btn.classList.add('active');
+        localStorage.setItem('activeAdminTab', tabId);
+    }
+    
+    // Restore active tab after reload
+    document.addEventListener('DOMContentLoaded', () => {
+        let activeTab = localStorage.getItem('activeAdminTab');
+        if (activeTab) {
+            let pane = document.getElementById('tab-' + activeTab);
+            let btn = document.querySelector(`.admin-tab-btn[onclick*="${activeTab}"]`);
+            if (pane && btn) {
+                document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
+                pane.classList.add('active');
+                btn.classList.add('active');
+            }
+        }
     });
 
     // Auto refresh every 30 seconds
