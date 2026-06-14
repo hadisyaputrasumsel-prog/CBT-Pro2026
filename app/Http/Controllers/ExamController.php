@@ -21,11 +21,11 @@ class ExamController extends Controller
             'nim' => 'nullable|string|max:255',
         ]);
 
-        $tpa_ids = Question::where('kategori', 'TPA')->inRandomOrder()->limit(30)->pluck('id')->toArray();
+        $tpa_ids = Question::where('mapel', 'TPA')->inRandomOrder()->limit(50)->pluck('id')->toArray();
         $mapel_ids = [];
         $mapels = ['Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris'];
         foreach ($mapels as $mapel) {
-            $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit(25)->pluck('id')->toArray();
+            $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit(50)->pluck('id')->toArray();
             $mapel_ids = array_merge($mapel_ids, $ids);
         }
         $questions_list = array_merge($tpa_ids, $mapel_ids);
@@ -151,6 +151,14 @@ class ExamController extends Controller
         $correct = 0;
         $wrong = 0;
         $unanswered = 0;
+        $wrong_details = [];
+
+        $path = storage_path('app/settings.json');
+        $show_kunci = true;
+        if (file_exists($path)) {
+            $settings = json_decode(file_get_contents($path), true);
+            $show_kunci = $settings['show_kunci_jawaban'] ?? true;
+        }
 
         foreach ($questions as $q) {
             $ans = $request->input('q_' . $q->id);
@@ -162,6 +170,13 @@ class ExamController extends Controller
                 $correct++;
             } elseif ($ans !== null) {
                 $wrong++;
+                $col_jawaban = 'pilihan_' . strtolower($q->jawaban);
+                $col_ans = 'pilihan_' . strtolower($ans);
+                $wrong_details[] = [
+                    'soal' => $q->soal,
+                    'kunci' => $show_kunci ? ($q->$col_jawaban ?? '-') : '*** Dirahasiakan ***',
+                    'jawaban_user' => $q->$col_ans ?? '-',
+                ];
             } else {
                 $unanswered++;
             }
@@ -198,7 +213,36 @@ class ExamController extends Controller
             'correct' => $correct,
             'wrong' => $wrong,
             'unanswered' => $unanswered,
-            'total' => $questions->count()
+            'total' => $questions->count(),
+            'wrong_details' => $wrong_details
         ]);
+    }
+
+    public function finishExam()
+    {
+        if (!session()->has('participant_id')) {
+            return redirect()->route('exam.welcome');
+        }
+
+        $participant = Participant::find(session('participant_id'));
+        if (!$participant) {
+            return redirect()->route('exam.welcome');
+        }
+
+        $tab_results = $participant->tab_results ?? [];
+        $totalScore = 0;
+        foreach ($tab_results as $res) {
+            $totalScore += $res['score'] ?? 0;
+        }
+        $avgScore = round($totalScore / 5, 2);
+
+        $participant->update([
+            'status' => 'selesai',
+            'score' => $avgScore
+        ]);
+
+        session()->forget('participant_id');
+
+        return redirect()->route('exam.welcome')->with('success', 'Ujian telah diakhiri. Terima kasih!');
     }
 }

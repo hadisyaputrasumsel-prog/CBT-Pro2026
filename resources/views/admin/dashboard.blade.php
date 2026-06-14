@@ -122,9 +122,18 @@
                 <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 5px;">Pantau Peserta Ujian</h2>
                 <p style="color: #94a3b8; margin: 0;">Lihat status dan hasil dari peserta CBT secara real-time.</p>
             </div>
-            <button onclick="window.location.reload()" class="btn btn-primary" style="padding: 10px 20px;">
-                <i data-lucide="refresh-cw"></i> Segarkan Data
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <form action="{{ route('admin.settings.toggle') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn {{ ($settings['show_kunci_jawaban'] ?? true) ? 'btn-outline' : 'btn-primary' }}" style="padding: 10px 20px; border-color: #ef4444; color: {{ ($settings['show_kunci_jawaban'] ?? true) ? '#ef4444' : '#fff' }}; background: {{ ($settings['show_kunci_jawaban'] ?? true) ? 'transparent' : '#ef4444' }};">
+                        <i data-lucide="{{ ($settings['show_kunci_jawaban'] ?? true) ? 'eye-off' : 'eye' }}"></i> 
+                        {{ ($settings['show_kunci_jawaban'] ?? true) ? 'Sembunyikan Kunci' : 'Tampilkan Kunci' }}
+                    </button>
+                </form>
+                <button onclick="window.location.reload()" class="btn btn-primary" style="padding: 10px 20px;">
+                    <i data-lucide="refresh-cw"></i> Segarkan Data
+                </button>
+            </div>
         </div>
 
         @php
@@ -236,14 +245,120 @@
                 </tbody>
             </table>
         </div>
+
+        </div>
+
+        <div class="admin-header" style="margin-top: 40px; margin-bottom: 20px;">
+            <div>
+                <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 5px;">AI Question Generator (Manual)</h2>
+                <p style="color: #94a3b8; margin: 0;">Tambah soal otomatis tanpa bentrok dengan soal yang sudah ada.</p>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;">
+            <!-- Langkah 1 -->
+            <div class="stat-card" style="flex-direction: column; align-items: flex-start; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <div style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                    <h3 style="margin: 0; font-size: 1.1rem; color:#1e293b; font-family: 'Outfit', sans-serif;">Generate Prompt</h3>
+                </div>
+                <p style="color:#64748b; font-size:0.9rem; margin-bottom: 20px; line-height: 1.5;">Pilih mata pelajaran dan jumlah soal. Sistem akan membuat instruksi (prompt) yang menyertakan soal lama agar AI tidak membuat soal yang redundan.</p>
+                
+                <div style="display: flex; gap: 15px; width: 100%; margin-bottom: 15px;">
+                    <div style="flex: 2;">
+                        <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px; font-weight: 500;">Mata Pelajaran</label>
+                        <select id="geminiMapel" style="width: 100%; background: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; font-family: 'Inter', sans-serif; outline: none;">
+                            <option value="TPA">TPA</option>
+                            <option value="Matematika">Matematika</option>
+                            <option value="IPA">IPA</option>
+                            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                            <option value="Bahasa Inggris">Bahasa Inggris</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px; font-weight: 500;">Jumlah</label>
+                        <input type="number" id="geminiJumlah" value="10" min="1" style="width: 100%; background: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; font-family: 'Inter', sans-serif; outline: none;" placeholder="Jml">
+                    </div>
+                </div>
+                <button type="button" id="btnSalinPrompt" class="btn btn-primary" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;">
+                    <i data-lucide="copy" style="width: 18px; height: 18px;"></i> Salin Prompt & Buka Gemini
+                </button>
+            </div>
+
+            <!-- Langkah 2 -->
+            <div class="stat-card" style="flex-direction: column; align-items: flex-start; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <div style="background: rgba(34, 197, 94, 0.1); color: #22c55e; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                    <h3 style="margin: 0; font-size: 1.1rem; color:#1e293b; font-family: 'Outfit', sans-serif;">Import JSON</h3>
+                </div>
+                <p style="color:#64748b; font-size:0.9rem; margin-bottom: 20px; line-height: 1.5;">Paste kode JSON balasan dari Gemini ke kotak di bawah ini. Sistem akan otomatis memvalidasi dan memindahkannya ke bank soal.</p>
+                <form action="{{ route('admin.import.gemini') }}" method="POST" style="width: 100%;">
+                    @csrf
+                    <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px; font-weight: 500;">Format JSON Array Mentah</label>
+                    <textarea name="json_data" rows="3" placeholder="Paste JSON array di sini..." style="width: 100%; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; padding: 10px; margin-bottom: 15px; font-family: monospace; outline: none; resize: vertical;" required></textarea>
+                    <button type="submit" class="btn btn-outline" style="width: 100%; border-color: #22c55e; color: #22c55e; display: flex; justify-content: center; align-items: center; gap: 8px;">
+                        <i data-lucide="download-cloud" style="width: 18px; height: 18px;"></i> Import Soal ke Database
+                    </button>
+                </form>
+            </div>
+        </div>
+
     </main>
 </div>
 
+@if(session('success'))
+<script>alert("{{ session('success') }}");</script>
+@endif
+
+@if(session('error'))
+<script>alert("{{ session('error') }}");</script>
+@endif
+
 <script>
     lucide.createIcons();
+    
+    document.getElementById('btnSalinPrompt').addEventListener('click', function() {
+        let btn = this;
+        let mapel = document.getElementById('geminiMapel').value;
+        let jumlah = document.getElementById('geminiJumlah').value;
+        let originalText = btn.innerHTML;
+        
+        btn.innerHTML = '<i data-lucide="loader" class="spin"></i> Memproses...';
+        lucide.createIcons();
+        
+        let formData = new FormData();
+        formData.append('mapel', mapel);
+        formData.append('jumlah', jumlah);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route('admin.gemini.prompt') }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            navigator.clipboard.writeText(data.prompt).then(() => {
+                alert("Prompt berhasil disalin ke clipboard! Silakan paste (Ctrl+V) di chat Gemini.");
+                window.open('https://gemini.google.com/app', '_blank');
+                btn.innerHTML = originalText;
+                lucide.createIcons();
+            }).catch(err => {
+                console.error('Gagal menyalin', err);
+                alert("Gagal menyalin prompt. Browser Anda mungkin memblokir akses clipboard. Anda bisa mencoba lagi.");
+                btn.innerHTML = originalText;
+                lucide.createIcons();
+            });
+        });
+    });
+
     // Auto refresh every 30 seconds
     setTimeout(function() {
-        window.location.reload();
+        if(!document.activeElement || document.activeElement.tagName !== 'TEXTAREA') {
+            window.location.reload();
+        }
     }, 30000);
 </script>
 </body>

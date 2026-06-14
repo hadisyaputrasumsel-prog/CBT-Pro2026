@@ -9,6 +9,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true
+        },
+        startup: {
+          pageReady: () => {
+            return MathJax.startup.defaultPageReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         .tabs-container {
             display: flex;
@@ -59,9 +74,17 @@
                 <h1>CBT Pro<span>2026</span></h1>
             </div>
             @if ($questions->count() > 0)
-            <div class="timer-container">
-                <i data-lucide="timer" class="timer-icon"></i>
-                <span id="timer">120:00</span>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div class="timer-container">
+                    <i data-lucide="timer" class="timer-icon"></i>
+                    <span id="timer">50:00</span>
+                </div>
+                <form method="POST" action="{{ route('exam.finish') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengakhiri ujian secara keseluruhan? Semua tab yang belum dikumpulkan akan mendapat nilai 0.');">
+                    @csrf
+                    <button type="submit" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444; padding: 8px 16px;">
+                        <i data-lucide="power"></i> Akhiri Ujian
+                    </button>
+                </form>
             </div>
             @endif
         </div>
@@ -77,7 +100,7 @@
         @else
             <div class="exam-intro">
                 <h2>Ujian CBT Online</h2>
-                <p>Ujian ini terdiri dari {{ $questions->count() }} soal pilihan ganda. Kerjakan dengan jujur dan teliti.</p>
+                <p>Ujian ini terdiri dari 50 soal pilihan ganda setiap mata pelajaran. Kerjakan dengan jujur dan teliti.</p>
             </div>
             
             <form id="cbtForm" method="POST" action="{{ route('exam.submit') }}">
@@ -139,7 +162,7 @@
     @if ($questions->count() > 0)
     let tabTimes = {};
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        tabTimes[btn.getAttribute('data-target')] = 30 * 60; // 30 minutes per tab
+        tabTimes[btn.getAttribute('data-target')] = 50 * 60; // 50 minutes per tab
     });
     let activeTab = document.querySelector('.tab-btn.active').getAttribute('data-target');
 
@@ -147,7 +170,7 @@
     const form = document.getElementById('cbtForm');
 
     const countdown = setInterval(() => {
-        if (tabTimes[activeTab] > 0) {
+        if (!submittedTabs[activeTab] && tabTimes[activeTab] > 0) {
             tabTimes[activeTab]--;
         }
         
@@ -162,7 +185,7 @@
             timerDisplay.parentElement.classList.remove('danger');
         }
 
-        if (tabTimes[activeTab] <= 0) {
+        if (!submittedTabs[activeTab] && tabTimes[activeTab] <= 0) {
             submitTabAjax(activeTab, document.querySelector(`.tab-btn[data-target="${activeTab}"]`).innerText.trim(), true);
         }
     }, 1000);
@@ -184,7 +207,7 @@
         formData.append('mapel', mapelName);
         
         // Calculate time taken
-        let timeTakenSeconds = (30 * 60) - tabTimes[tabId];
+        let timeTakenSeconds = (50 * 60) - tabTimes[tabId];
         if (timeTakenSeconds < 0) timeTakenSeconds = 0;
         
         formData.append('time_taken_seconds', timeTakenSeconds);
@@ -207,6 +230,28 @@
         })
         .then(res => res.json())
         .then(data => {
+            let wrongQuestionsHtml = '';
+            if (data.wrong_details && data.wrong_details.length > 0) {
+                wrongQuestionsHtml = `
+                    <div class="wrong-questions-section" style="margin-top: 30px; text-align: left;">
+                        <h3 style="margin-bottom: 15px; color: #ef4444; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="x-circle"></i> Detail Jawaban Salah
+                        </h3>
+                        <div class="wrong-list" style="display: flex; flex-direction: column; gap: 15px;">
+                            ${data.wrong_details.map((wd, index) => `
+                                <div class="wrong-item" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                    <div style="margin-bottom: 10px; font-weight: 500;">Soal ${index + 1}: <br><span style="font-weight: 400">${wd.soal.replace(/\\n/g, '<br>')}</span></div>
+                                    <div style="font-size: 0.95rem; color: #94a3b8;">
+                                        <div style="margin-bottom: 5px;">Jawaban Anda: <span style="color: #ef4444; text-decoration: line-through;">${wd.jawaban_user}</span></div>
+                                        <div>Kunci Jawaban: <span style="color: #22c55e;">${wd.kunci}</span></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
             tabContent.innerHTML = `
                 <div class="result-dashboard animate-in" style="margin-top: 0; padding: 20px;">
                     <div class="score-card">
@@ -226,6 +271,7 @@
                             </div>
                         </div>
                     </div>
+                    ${wrongQuestionsHtml}
                 </div>
             `;
             
@@ -252,39 +298,32 @@
     });
 
     document.querySelectorAll('.btnCheck').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', function() {
             let emptyCount = 0;
             let firstEmpty = null;
-            let firstEmptyTabId = null;
             
-            @foreach ($questions as $q)
-                const q{{ $q->id }} = document.querySelector('input[name="q_{{ $q->id }}"]:checked');
-                if (!q{{ $q->id }}) {
+            const tabContent = this.closest('.tab-content');
+            const questionCards = tabContent.querySelectorAll('.question-card');
+            
+            questionCards.forEach(card => {
+                const checkedOption = card.querySelector('input[type="radio"]:checked');
+                
+                if (!checkedOption) {
                     emptyCount++;
-                    document.getElementById('q_card_{{ $q->id }}').classList.add('highlight-empty');
+                    card.classList.add('highlight-empty');
                     if (!firstEmpty) {
-                        firstEmpty = document.getElementById('q_card_{{ $q->id }}');
-                        firstEmptyTabId = firstEmpty.closest('.tab-content').id;
+                        firstEmpty = card;
                     }
                 } else {
-                    document.getElementById('q_card_{{ $q->id }}').classList.remove('highlight-empty');
+                    card.classList.remove('highlight-empty');
                 }
-            @endforeach
+            });
 
             if (emptyCount > 0) {
-                alert(`Terdapat ${emptyCount} soal yang belum dijawab.`);
-                
-                // Switch to the tab of the first empty question
-                if(firstEmptyTabId) {
-                    let targetBtn = document.querySelector(`.tab-btn[data-target="${firstEmptyTabId}"]`);
-                    if (!targetBtn.disabled) {
-                        targetBtn.click();
-                    }
-                }
-
+                alert(`Terdapat ${emptyCount} soal yang belum dijawab di bagian ini.`);
                 firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
-                alert("Semua soal telah dijawab!");
+                alert("Semua soal di bagian ini telah dijawab!");
             }
         });
     });
@@ -311,6 +350,11 @@
                 timerDisplay.parentElement.classList.add('danger');
             } else {
                 timerDisplay.parentElement.classList.remove('danger');
+            }
+
+            // Render MathJax if available
+            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                MathJax.typesetPromise([document.getElementById(target)]).catch((err) => console.error(err.message));
             }
         });
     });
