@@ -1007,10 +1007,17 @@
         if (!text) return;
         
         try {
-            // Clean markdown if present
-            text = text.replace(/```json\s*/, '').replace(/```\s*/, '');
-            // Fix backslashes for MathJax
-            text = text.replace(/(?<!\\)\\(?![\\"])/g, '\\\\');
+            // Extract only the JSON object part to ignore Gemini's conversational text
+            let start = text.indexOf('{');
+            let end = text.lastIndexOf('}');
+            if (start !== -1 && end !== -1 && end > start) {
+                text = text.substring(start, end + 1);
+            } else {
+                throw new Error("Tidak dapat menemukan format JSON yang valid di dalam teks.");
+            }
+            
+            // Fix backslashes for MathJax (but avoid breaking \n, \t, \r)
+            text = text.replace(/(?<!\\)\\(?![\\"ntr])/g, '\\\\');
             let data = JSON.parse(text);
             
             if (data.soal) document.getElementById('edit-soal').value = data.soal;
@@ -1025,7 +1032,8 @@
             document.getElementById('aiFixContainer').style.display = 'none';
             alert('Perbaikan AI berhasil diterapkan!');
         } catch (e) {
-            console.error("JSON Parse Error:", e);
+            alert("Gagal memproses JSON. Pastikan Anda meng-copy keseluruhan format JSON dari Gemini dengan benar!\n\nError Detail: " + e.message);
+            console.error("JSON Parse Error:", e, "\nText tried to parse:\n", text);
         }
     }
 
