@@ -954,7 +954,8 @@
 
         let prompt = "Tolong perbaiki tata bahasa, ejaan, dan perbaiki penulisan rumus/angka matematika pada soal berikut ini menggunakan format LaTeX/MathJax. WAJIB gunakan pembatas \\( ... \\) untuk inline dan $$ ... $$ untuk blok matematika.\n";
         prompt += "Tolong buatkan juga langkah-langkah penyelesaian atau pembahasan yang jelas untuk soal ini.\n\n";
-        prompt += "PENTING: JANGAN PERNAH menggunakan tanda kutip ganda (\") di dalam teks jawaban, soal, maupun pembahasan. Gunakan tanda kutip tunggal (').\n\n";
+        prompt += "PENTING: JANGAN PERNAH menggunakan tanda kutip ganda (\") di dalam teks jawaban, soal, maupun pembahasan. Gunakan tanda kutip tunggal (').\n";
+        prompt += "PENTING 2: JANGAN menggunakan baris baru (enter/newline) asli secara langsung di dalam string JSON. Jika butuh baris baru, ketikkan \\n di dalam teks.\n\n";
         prompt += "KEMBALIKAN HANYA DALAM BENTUK JSON OBJECT mentah seperti struktur ini:\n";
         prompt += `{\n  "soal": "teks soal...",\n  "pilihan_a": "...",\n  "pilihan_b": "...",\n  "pilihan_c": "...",\n  "pilihan_d": "...",\n  "jawaban": "${jawaban}",\n  "pembahasan": "penjelasan langkah penyelesaian..."\n}\n\n`;
         prompt += "Berikut data soal aslinya:\n";
@@ -1015,6 +1016,9 @@
             } else {
                 throw new Error("Tidak dapat menemukan format JSON yang valid di dalam teks.");
             }
+            
+            // HAPUS karakter control asli (enter/newline/tab mentah) yang merusak format JSON
+            text = text.replace(/[\r\n\t]+/g, ' ');
             
             // Fix backslashes for MathJax (but avoid breaking \n, \t, \r)
             text = text.replace(/(?<!\\)\\(?![\\"ntr])/g, '\\\\');

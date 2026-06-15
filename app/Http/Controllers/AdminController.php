@@ -62,6 +62,7 @@ class AdminController extends Controller
                 . $existingJson . "\n\n"
                 . "2. WAJIB gunakan format LaTeX/MathJax untuk SEMUA unsur matematika (rumus, angka, variabel seperti x, y, persamaan, dsb). WAJIB gunakan pembatas \\( ... \\) untuk rumus di dalam baris (inline), atau $$ ... $$ untuk rumus di baris terpisah (blok). Contoh salah: x^2 = 4. Contoh benar: \\( x^2 = 4 \\).\n\n"
                 . "3. JANGAN PERNAH menggunakan tanda kutip ganda (\") di dalam isi teks soal maupun pilihan ganda. Jika Anda butuh tanda kutip, gunakan HANYA tanda kutip tunggal ('). Penggunaan tanda kutip ganda di dalam teks akan merusak format JSON!\n\n"
+                . "4. PENTING: JANGAN menggunakan baris baru (enter/newline) asli secara langsung di dalam string JSON. Gunakan \\n untuk membuat baris baru di teks soal atau pembahasan.\n\n"
                 . "Keluarkan hasil akhir HANYA dalam format JSON Array mentah, tanpa markdown, tanpa penjelasan lain. Struktur JSON wajib persis seperti ini untuk setiap soal:\n"
                 . "[\n  {\n    \"kategori\": \"$kategori\",\n    \"mapel\": \"$mapel\",\n    \"tingkat_kesulitan\": \"$tingkat\",\n    \"soal\": \"teks soal dengan \\( rumus \\) dan tanda kutip tunggal 'seperti ini'\",\n    \"pilihan_a\": \"pilihan A\",\n    \"pilihan_b\": \"pilihan B\",\n    \"pilihan_c\": \"pilihan C\",\n    \"pilihan_d\": \"pilihan D\",\n    \"jawaban\": \"A\",\n    \"pembahasan\": \"Langkah-langkah penyelesaian atau penjelasan ringkas mengenai mengapa jawaban tersebut benar.\",\n    \"bobot\": 4\n  }\n]";
 
@@ -76,8 +77,11 @@ class AdminController extends Controller
         $jsonString = preg_replace('/```json\s*/', '', $jsonString);
         $jsonString = preg_replace('/```\s*/', '', $jsonString);
         
+        // HAPUS karakter control asli (enter/newline/tab mentah) yang merusak format JSON
+        $jsonString = preg_replace('/[\r\n\t]+/', ' ', $jsonString);
+
         // Perbaiki backslash tunggal dari LaTeX (\frac menjadi \\frac) agar JSON valid
-        $jsonString = preg_replace('/(?<!\\\\)\\\\(?![\\\\"])/', '\\\\\\\\', $jsonString);
+        $jsonString = preg_replace('/(?<!\\\\)\\\\(?![\\\\"ntr])/', '\\\\\\\\', $jsonString);
 
         $data = json_decode(trim($jsonString), true);
 
