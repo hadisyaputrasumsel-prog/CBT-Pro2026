@@ -828,6 +828,17 @@
                     @csrf
                     @method('PUT')
                     
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <button type="button" class="btn btn-outline" onclick="copyAIFixPrompt()" id="btnCopyAIFix" style="border-color: #a855f7; color: #a855f7; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i> Perbaiki Otomatis dengan AI
+                        </button>
+                    </div>
+
+                    <div id="aiFixContainer" style="display: none; margin-bottom: 20px; background: rgba(168, 85, 247, 0.1); padding: 15px; border-radius: 8px; border: 1px dashed rgba(168, 85, 247, 0.5);">
+                        <label style="color: #c084fc; font-size: 0.85rem; display: block; margin-bottom: 8px;">Paste JSON balasan Gemini di sini:</label>
+                        <textarea id="aiFixInput" class="form-control" rows="3" placeholder='{"soal": "...", "pilihan_a": "...", ...}' oninput="applyAIFix(this)"></textarea>
+                    </div>
+                    
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="form-group">
                             <label>Mata Pelajaran</label>
@@ -877,6 +888,10 @@
                         <label>Pilihan D</label>
                         <input type="text" name="pilihan_d" id="edit-d" class="form-control" required>
                     </div>
+                    <div class="form-group">
+                        <label>Pembahasan / Langkah Penyelesaian (Opsional)</label>
+                        <textarea name="pembahasan" id="edit-pembahasan" class="form-control" rows="3"></textarea>
+                    </div>
 
                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
                         <button type="button" class="btn btn-outline" onclick="closeEditModal()">Batal</button>
@@ -914,9 +929,74 @@
         document.getElementById('edit-b').value = question.pilihan_b || '';
         document.getElementById('edit-c').value = question.pilihan_c || '';
         document.getElementById('edit-d').value = question.pilihan_d || '';
+        document.getElementById('edit-pembahasan').value = question.pembahasan || '';
+        
+        // Reset AI container
+        document.getElementById('aiFixContainer').style.display = 'none';
+        document.getElementById('aiFixInput').value = '';
+        let btnAIFix = document.getElementById('btnCopyAIFix');
+        btnAIFix.innerHTML = '<i data-lucide="sparkles" style="width: 16px; height: 16px;"></i> Perbaiki Otomatis dengan AI';
+        btnAIFix.style.background = 'transparent';
+        btnAIFix.style.color = '#a855f7';
         
         window.isModalOpen = true;
         lucide.createIcons();
+    }
+
+    function copyAIFixPrompt() {
+        let soal = document.getElementById('edit-soal').value;
+        let pilA = document.getElementById('edit-a').value;
+        let pilB = document.getElementById('edit-b').value;
+        let pilC = document.getElementById('edit-c').value;
+        let pilD = document.getElementById('edit-d').value;
+        let jawaban = document.getElementById('edit-jawaban').value;
+        let pembahasan = document.getElementById('edit-pembahasan').value;
+
+        let prompt = "Tolong perbaiki tata bahasa, ejaan, dan perbaiki penulisan rumus/angka matematika pada soal berikut ini menggunakan format LaTeX/MathJax. WAJIB gunakan pembatas \\( ... \\) untuk inline dan $$ ... $$ untuk blok matematika.\n";
+        prompt += "Tolong buatkan juga langkah-langkah penyelesaian atau pembahasan yang jelas untuk soal ini.\n\n";
+        prompt += "PENTING: JANGAN PERNAH menggunakan tanda kutip ganda (\") di dalam teks jawaban, soal, maupun pembahasan. Gunakan tanda kutip tunggal (').\n\n";
+        prompt += "KEMBALIKAN HANYA DALAM BENTUK JSON OBJECT mentah seperti struktur ini:\n";
+        prompt += `{\n  "soal": "teks soal...",\n  "pilihan_a": "...",\n  "pilihan_b": "...",\n  "pilihan_c": "...",\n  "pilihan_d": "...",\n  "jawaban": "${jawaban}",\n  "pembahasan": "penjelasan langkah penyelesaian..."\n}\n\n`;
+        prompt += "Berikut data soal aslinya:\n";
+        prompt += `Soal: ${soal}\n`;
+        prompt += `A: ${pilA}\nB: ${pilB}\nC: ${pilC}\nD: ${pilD}\n`;
+        if (pembahasan) prompt += `Pembahasan Lama: ${pembahasan}\n`;
+
+        navigator.clipboard.writeText(prompt).then(() => {
+            let btnAIFix = document.getElementById('btnCopyAIFix');
+            btnAIFix.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i> Prompt Disalin! Tempel di Gemini';
+            btnAIFix.style.background = 'rgba(168, 85, 247, 0.2)';
+            document.getElementById('aiFixContainer').style.display = 'block';
+            lucide.createIcons();
+            setTimeout(() => window.open('https://gemini.google.com/', '_blank'), 500);
+        });
+    }
+
+    function applyAIFix(textarea) {
+        let text = textarea.value.trim();
+        if (!text) return;
+        
+        try {
+            // Clean markdown if present
+            text = text.replace(/```json\s*/, '').replace(/```\s*/, '');
+            // Fix backslashes for MathJax
+            text = text.replace(/(?<!\\)\\(?![\\"])/g, '\\\\');
+            let data = JSON.parse(text);
+            
+            if (data.soal) document.getElementById('edit-soal').value = data.soal;
+            if (data.pilihan_a) document.getElementById('edit-a').value = data.pilihan_a;
+            if (data.pilihan_b) document.getElementById('edit-b').value = data.pilihan_b;
+            if (data.pilihan_c) document.getElementById('edit-c').value = data.pilihan_c;
+            if (data.pilihan_d) document.getElementById('edit-d').value = data.pilihan_d;
+            if (data.jawaban) document.getElementById('edit-jawaban').value = data.jawaban;
+            if (data.pembahasan) document.getElementById('edit-pembahasan').value = data.pembahasan;
+            
+            textarea.value = '';
+            document.getElementById('aiFixContainer').style.display = 'none';
+            alert('Perbaikan AI berhasil diterapkan!');
+        } catch (e) {
+            console.error("JSON Parse Error:", e);
+        }
     }
 
     function closeEditModal() {
