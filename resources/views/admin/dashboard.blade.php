@@ -696,6 +696,14 @@
                                 <option value="Bahasa Inggris">Bahasa Inggris</option>
                             </select>
                         </div>
+                        <div style="flex: 1.5;">
+                            <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 500;">Tingkat</label>
+                            <select id="geminiTingkat" style="width: 100%; background: rgba(15, 23, 42, 0.5); color: #f8fafc; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                                <option value="Mudah">Mudah</option>
+                                <option value="Sedang">Sedang</option>
+                                <option value="Sulit" selected>Sulit</option>
+                            </select>
+                        </div>
                         <div style="flex: 1;">
                             <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 500;">Jumlah</label>
                             <input type="number" id="geminiJumlah" value="10" min="1" style="width: 100%; background: rgba(15, 23, 42, 0.5); color: #f8fafc; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; font-family: 'Inter', sans-serif; outline: none;" placeholder="Jml">
@@ -982,6 +990,7 @@
     document.getElementById('btnSalinPrompt').addEventListener('click', function() {
         let btn = this;
         let mapel = document.getElementById('geminiMapel').value;
+        let tingkat = document.getElementById('geminiTingkat').value;
         let jumlah = document.getElementById('geminiJumlah').value;
         let originalText = btn.innerHTML;
         
@@ -990,6 +999,7 @@
         
         let formData = new FormData();
         formData.append('mapel', mapel);
+        formData.append('tingkat', tingkat);
         formData.append('jumlah', jumlah);
         formData.append('_token', '{{ csrf_token() }}');
 

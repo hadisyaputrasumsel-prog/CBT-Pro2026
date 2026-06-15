@@ -50,19 +50,20 @@ class AdminController extends Controller
     {
         $mapel = $request->input('mapel');
         $jumlah = $request->input('jumlah', 10);
+        $tingkat = $request->input('tingkat', 'Sulit');
         $kategori = $mapel === 'TPA' ? 'TPA' : 'Akademik';
 
         $existingQuestions = Question::where('mapel', $mapel)->pluck('soal')->toArray();
         $existingJson = json_encode($existingQuestions, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $prompt = "Bertindaklah sebagai pembuat soal ujian yang profesional. Buatkan $jumlah soal pilihan ganda tingkat kesulitan 'Sulit' untuk mata pelajaran $mapel. \n\n"
+        $prompt = "Bertindaklah sebagai pembuat soal ujian yang profesional. Buatkan $jumlah soal pilihan ganda tingkat kesulitan '$tingkat' untuk mata pelajaran $mapel. \n\n"
                 . "PENTING:\n"
                 . "1. Soal-soal ini tidak boleh sama, mirip, atau memiliki makna yang serupa dengan daftar soal berikut yang sudah ada di database saya:\n"
                 . $existingJson . "\n\n"
                 . "2. Jika soal mengandung rumus Matematika, Fisika, atau angka/simbol kompleks, gunakan format LaTeX/MathJax. Gunakan pembatas \\( ... \\) untuk rumus di dalam baris teks (inline), atau $$ ... $$ untuk rumus di baris terpisah (blok).\n\n"
                 . "3. JANGAN PERNAH menggunakan tanda kutip ganda (\") di dalam isi teks soal maupun pilihan ganda. Jika Anda butuh tanda kutip, gunakan HANYA tanda kutip tunggal ('). Penggunaan tanda kutip ganda di dalam teks akan merusak format JSON!\n\n"
                 . "Keluarkan hasil akhir HANYA dalam format JSON Array mentah, tanpa markdown, tanpa penjelasan lain. Struktur JSON wajib persis seperti ini untuk setiap soal:\n"
-                . "[\n  {\n    \"kategori\": \"$kategori\",\n    \"mapel\": \"$mapel\",\n    \"tingkat_kesulitan\": \"Sulit\",\n    \"soal\": \"teks soal dengan \\( rumus \\) dan tanda kutip tunggal 'seperti ini'\",\n    \"pilihan_a\": \"pilihan A\",\n    \"pilihan_b\": \"pilihan B\",\n    \"pilihan_c\": \"pilihan C\",\n    \"pilihan_d\": \"pilihan D\",\n    \"jawaban\": \"A\",\n    \"bobot\": 4\n  }\n]";
+                . "[\n  {\n    \"kategori\": \"$kategori\",\n    \"mapel\": \"$mapel\",\n    \"tingkat_kesulitan\": \"$tingkat\",\n    \"soal\": \"teks soal dengan \\( rumus \\) dan tanda kutip tunggal 'seperti ini'\",\n    \"pilihan_a\": \"pilihan A\",\n    \"pilihan_b\": \"pilihan B\",\n    \"pilihan_c\": \"pilihan C\",\n    \"pilihan_d\": \"pilihan D\",\n    \"jawaban\": \"A\",\n    \"bobot\": 4\n  }\n]";
 
         return response()->json(['prompt' => $prompt]);
     }
