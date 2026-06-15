@@ -734,22 +734,44 @@
                 </div>
             </div>
 
-            <div class="stat-card" style="flex-direction: row; justify-content: space-between; max-width: 700px; padding: 30px;">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 64px; height: 64px; border-radius: 16px;">
-                        <i data-lucide="{{ ($settings['show_kunci_jawaban'] ?? true) ? 'eye' : 'eye-off' }}" style="width: 28px; height: 28px;"></i>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="stat-card" style="flex-direction: row; justify-content: space-between; max-width: 700px; padding: 30px;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 64px; height: 64px; border-radius: 16px;">
+                            <i data-lucide="{{ ($settings['show_kunci_jawaban'] ?? true) ? 'eye' : 'eye-off' }}" style="width: 28px; height: 28px;"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.3rem; color: #f8fafc; font-family: 'Outfit', sans-serif; margin: 0 0 8px 0;">Kunci Jawaban Ujian</h3>
+                            <p style="color: #94a3b8; font-size: 0.95rem; margin: 0; max-width: 350px;">Izinkan sistem untuk menampilkan hasil dan kunci jawaban yang benar setelah peserta menyelesaikan ujian.</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 style="font-size: 1.3rem; color: #f8fafc; font-family: 'Outfit', sans-serif; margin: 0 0 8px 0;">Kunci Jawaban Ujian</h3>
-                        <p style="color: #94a3b8; font-size: 0.95rem; margin: 0; max-width: 350px;">Izinkan sistem untuk menampilkan hasil dan kunci jawaban yang benar setelah peserta menyelesaikan ujian.</p>
-                    </div>
+                    <form action="{{ route('admin.settings.toggle') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn {{ ($settings['show_kunci_jawaban'] ?? true) ? 'btn-outline' : 'btn-primary' }}" style="padding: 12px 24px; font-weight: 600; border-color: #ef4444; color: {{ ($settings['show_kunci_jawaban'] ?? true) ? '#ef4444' : '#fff' }}; background: {{ ($settings['show_kunci_jawaban'] ?? true) ? 'transparent' : '#ef4444' }};">
+                            {{ ($settings['show_kunci_jawaban'] ?? true) ? 'Sembunyikan Kunci' : 'Tampilkan Kunci' }}
+                        </button>
+                    </form>
                 </div>
-                <form action="{{ route('admin.settings.toggle') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn {{ ($settings['show_kunci_jawaban'] ?? true) ? 'btn-outline' : 'btn-primary' }}" style="padding: 12px 24px; font-weight: 600; border-color: #ef4444; color: {{ ($settings['show_kunci_jawaban'] ?? true) ? '#ef4444' : '#fff' }}; background: {{ ($settings['show_kunci_jawaban'] ?? true) ? 'transparent' : '#ef4444' }};">
-                        {{ ($settings['show_kunci_jawaban'] ?? true) ? 'Sembunyikan Kunci' : 'Tampilkan Kunci' }}
-                    </button>
-                </form>
+
+                <div class="stat-card" style="flex-direction: row; justify-content: space-between; max-width: 700px; padding: 30px;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; width: 64px; height: 64px; border-radius: 16px;">
+                            <i data-lucide="clock" style="width: 28px; height: 28px;"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.3rem; color: #f8fafc; font-family: 'Outfit', sans-serif; margin: 0 0 8px 0;">Waktu Per Soal</h3>
+                            <p style="color: #94a3b8; font-size: 0.95rem; margin: 0; max-width: 350px;">Atur berapa menit alokasi waktu yang diberikan untuk setiap 1 soal. Waktu tab otomatis dikalikan jumlah soal.</p>
+                        </div>
+                    </div>
+                    <form action="{{ route('admin.settings.waktu') }}" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                        @csrf
+                        <input type="number" name="menit_per_soal" value="{{ $settings['menit_per_soal'] ?? 1 }}" min="1" class="form-control" style="width: 80px; text-align: center; font-weight: bold; font-size: 1.1rem; border-color: rgba(59, 130, 246, 0.3);">
+                        <span style="color: #94a3b8;">Menit</span>
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 16px; margin-left: 10px;">
+                            <i data-lucide="save" style="width: 18px; height: 18px;"></i> Simpan
+                        </button>
+                    </form>
+                </div>
             </div>
         </section>
 

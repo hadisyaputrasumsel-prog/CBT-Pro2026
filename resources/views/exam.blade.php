@@ -160,14 +160,22 @@
     lucide.createIcons();
 
     @if ($questions->count() > 0)
+    let menitPerSoal = {{ $menit_per_soal ?? 1 }};
     let tabTimes = {};
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        tabTimes[btn.getAttribute('data-target')] = 50 * 60; // 50 minutes per tab
+        let target = btn.getAttribute('data-target');
+        let questionCount = document.querySelectorAll(`#${target} .question-card`).length;
+        tabTimes[target] = questionCount * menitPerSoal * 60; // minutes to seconds
     });
     let activeTab = document.querySelector('.tab-btn.active').getAttribute('data-target');
 
     const timerDisplay = document.getElementById('timer');
     const form = document.getElementById('cbtForm');
+
+    // Initial update immediately
+    const initialMinutes = Math.floor(tabTimes[activeTab] / 60);
+    const initialSeconds = tabTimes[activeTab] % 60;
+    timerDisplay.textContent = `${initialMinutes.toString().padStart(2, '0')}:${initialSeconds.toString().padStart(2, '0')}`;
 
     const countdown = setInterval(() => {
         if (!submittedTabs[activeTab] && tabTimes[activeTab] > 0) {
@@ -207,7 +215,9 @@
         formData.append('mapel', mapelName);
         
         // Calculate time taken
-        let timeTakenSeconds = (50 * 60) - tabTimes[tabId];
+        let questionCount = document.querySelectorAll(`#${tabId} .question-card`).length;
+        let totalAllocatedSeconds = questionCount * menitPerSoal * 60;
+        let timeTakenSeconds = totalAllocatedSeconds - tabTimes[tabId];
         if (timeTakenSeconds < 0) timeTakenSeconds = 0;
         
         formData.append('time_taken_seconds', timeTakenSeconds);

@@ -13,9 +13,13 @@ class AdminController extends Controller
     {
         $path = storage_path('app/settings.json');
         if (!file_exists($path)) {
-            return ['show_kunci_jawaban' => true];
+            return ['show_kunci_jawaban' => true, 'menit_per_soal' => 1];
         }
-        return json_decode(file_get_contents($path), true) ?? ['show_kunci_jawaban' => true];
+        $settings = json_decode(file_get_contents($path), true) ?? ['show_kunci_jawaban' => true];
+        if (!isset($settings['menit_per_soal'])) {
+            $settings['menit_per_soal'] = 1;
+        }
+        return $settings;
     }
 
     public function index()
@@ -31,7 +35,15 @@ class AdminController extends Controller
         $settings = $this->getSettings();
         $settings['show_kunci_jawaban'] = !($settings['show_kunci_jawaban'] ?? true);
         file_put_contents(storage_path('app/settings.json'), json_encode($settings));
-        return redirect()->back()->with('success', 'Konfigurasi berhasil diubah');
+        return redirect()->back()->with('success', 'Konfigurasi kunci jawaban berhasil diubah');
+    }
+
+    public function updateWaktuSoal(Request $request)
+    {
+        $settings = $this->getSettings();
+        $settings['menit_per_soal'] = max(1, (int) $request->input('menit_per_soal', 1));
+        file_put_contents(storage_path('app/settings.json'), json_encode($settings));
+        return redirect()->back()->with('success', 'Waktu per soal berhasil diubah');
     }
 
     public function getGeminiPrompt(Request $request)

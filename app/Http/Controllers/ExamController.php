@@ -60,7 +60,14 @@ class ExamController extends Controller
             return $order[$q->mapel] ?? 99;
         });
 
-        return view('exam', compact('questions', 'participant'));
+        $path = storage_path('app/settings.json');
+        $menit_per_soal = 1;
+        if (file_exists($path)) {
+            $settings = json_decode(file_get_contents($path), true);
+            $menit_per_soal = $settings['menit_per_soal'] ?? 1;
+        }
+
+        return view('exam', compact('questions', 'participant', 'menit_per_soal'));
     }
 
     public function submit(Request $request)
