@@ -978,19 +978,61 @@
                 'Accept': 'application/json'
             }
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                return res.text().then(text => { throw new Error('Error dari server: ' + res.status + ' ' + text.substring(0, 100)); });
+            }
+            return res.json();
+        })
         .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Fallback for non-HTTPS or if clipboard API is not available
+            if (!navigator.clipboard) {
+                try {
+                    let textArea = document.createElement("textarea");
+                    textArea.value = data.prompt;
+                    textArea.style.position = "fixed";  // Avoid scrolling to bottom
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    let successful = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    if (successful) {
+                        alert("Prompt berhasil disalin ke clipboard! Silakan paste (Ctrl+V) di chat Gemini.");
+                        window.open('https://gemini.google.com/app', '_blank');
+                    } else {
+                        alert("Gagal menyalin prompt. Browser Anda mungkin memblokir akses clipboard. Anda bisa menyalinnya secara manual dari textarea sementara jika diperlukan.");
+                    }
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                    alert("Gagal menyalin prompt. Browser Anda tidak mendukung fitur copy otomatis di jaringan HTTP/tanpa SSL.");
+                }
+                btn.innerHTML = originalText;
+                lucide.createIcons();
+                return;
+            }
+
+            // Secure context (HTTPS or localhost)
             navigator.clipboard.writeText(data.prompt).then(() => {
                 alert("Prompt berhasil disalin ke clipboard! Silakan paste (Ctrl+V) di chat Gemini.");
                 window.open('https://gemini.google.com/app', '_blank');
-                btn.innerHTML = originalText;
-                lucide.createIcons();
             }).catch(err => {
                 console.error('Gagal menyalin', err);
                 alert("Gagal menyalin prompt. Browser Anda mungkin memblokir akses clipboard. Anda bisa mencoba lagi.");
+            }).finally(() => {
                 btn.innerHTML = originalText;
                 lucide.createIcons();
             });
+        })
+        .catch(err => {
+            console.error('Terjadi kesalahan:', err);
+            alert("Gagal memproses: " + err.message);
+            btn.innerHTML = originalText;
+            lucide.createIcons();
         });
     });
 
