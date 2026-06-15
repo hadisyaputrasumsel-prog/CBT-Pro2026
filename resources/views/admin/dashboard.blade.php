@@ -962,14 +962,44 @@
         prompt += `A: ${pilA}\nB: ${pilB}\nC: ${pilC}\nD: ${pilD}\n`;
         if (pembahasan) prompt += `Pembahasan Lama: ${pembahasan}\n`;
 
-        navigator.clipboard.writeText(prompt).then(() => {
+        function handleSuccess() {
             let btnAIFix = document.getElementById('btnCopyAIFix');
             btnAIFix.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i> Prompt Disalin! Tempel di Gemini';
             btnAIFix.style.background = 'rgba(168, 85, 247, 0.2)';
             document.getElementById('aiFixContainer').style.display = 'block';
             lucide.createIcons();
             setTimeout(() => window.open('https://gemini.google.com/', '_blank'), 500);
-        });
+        }
+
+        if (!navigator.clipboard) {
+            try {
+                let textArea = document.createElement("textarea");
+                textArea.value = prompt;
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                let successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                if (successful) {
+                    handleSuccess();
+                } else {
+                    alert("Browser Anda tidak mendukung auto-copy. Silakan salin prompt ini manual:\n\n" + prompt);
+                    handleSuccess();
+                }
+            } catch (err) {
+                alert("Gagal menyalin. Silakan salin prompt ini manual:\n\n" + prompt);
+                handleSuccess();
+            }
+        } else {
+            navigator.clipboard.writeText(prompt).then(() => {
+                handleSuccess();
+            }).catch(err => {
+                alert("Gagal menyalin. Silakan salin prompt ini manual:\n\n" + prompt);
+                handleSuccess();
+            });
+        }
     }
 
     function applyAIFix(textarea) {
