@@ -16,6 +16,24 @@
             background: #0f172a;
             color: #f8fafc;
         }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.4);
+        }
+
         .admin-layout {
             display: flex;
             min-height: 100vh;
@@ -549,7 +567,7 @@
                                             <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
                                         </td>
                                         <td style="vertical-align: top;">
-                                            <div style="max-height: 150px; max-width: 500px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
+                                            <div style="max-height: 180px; min-width: 350px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
                                                 {!! nl2br(e($q->soal)) !!}
                                             </div>
                                         </td>
@@ -616,7 +634,7 @@
                                                 <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
                                             </td>
                                             <td style="vertical-align: top;">
-                                                <div style="max-height: 150px; max-width: 500px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
+                                                <div style="max-height: 180px; min-width: 350px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
                                                     {!! nl2br(e($q->soal)) !!}
                                                 </div>
                                             </td>
