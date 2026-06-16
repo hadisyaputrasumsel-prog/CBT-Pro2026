@@ -137,6 +137,12 @@ class AdminController extends Controller
         return redirect()->back()->with('success', "Berhasil mengimpor $imported soal baru dari Gemini!");
     }
 
+    public function storeQuestion(Request $request)
+    {
+        Question::create($request->all());
+        return redirect()->back()->with('success', 'Berhasil menyimpan sebagai soal baru!');
+    }
+
     public function updateQuestion(Request $request, $id)
     {
         $q = Question::findOrFail($id);

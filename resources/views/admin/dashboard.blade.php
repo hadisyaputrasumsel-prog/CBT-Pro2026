@@ -887,7 +887,7 @@
                 </div>
                 <form id="editForm" method="POST">
                     @csrf
-                    @method('PUT')
+                    <input type="hidden" name="_method" id="formMethod" value="PUT">
                     
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <button type="button" class="btn btn-outline" onclick="copyAIFixPrompt()" id="btnCopyAIFix" style="border-color: #a855f7; color: #a855f7; display: flex; align-items: center; gap: 8px;">
@@ -956,6 +956,9 @@
 
                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
                         <button type="button" class="btn btn-outline" onclick="closeEditModal()">Batal</button>
+                        <button type="button" class="btn btn-primary" style="background: #10b981; border-color: #10b981; padding: 10px 20px; display: flex; align-items: center; gap: 8px;" onclick="submitAsNew()">
+                            <i data-lucide="copy" style="width: 18px; height: 18px;"></i> Simpan sbg Soal Baru
+                        </button>
                         <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Simpan Perubahan</button>
                     </div>
                 </form>
@@ -1026,6 +1029,7 @@
     function openEditModal(question) {
         document.getElementById('editModal').classList.add('active');
         document.getElementById('editForm').action = `/admin/question/${question.id}`;
+        document.getElementById('formMethod').value = 'PUT';
         
         document.getElementById('edit-mapel').value = question.mapel || '';
         document.getElementById('edit-kategori').value = question.kategori || '';
@@ -1048,6 +1052,13 @@
         
         window.isModalOpen = true;
         lucide.createIcons();
+    }
+
+    function submitAsNew() {
+        let form = document.getElementById('editForm');
+        form.action = "{{ route('admin.question.store') }}";
+        document.getElementById('formMethod').value = 'POST';
+        form.submit();
     }
 
     function copyAIFixPrompt() {

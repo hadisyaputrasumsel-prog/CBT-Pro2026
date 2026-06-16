@@ -17,6 +17,7 @@ Route::post('/admin/settings/waktu-soal', [AdminController::class, 'updateWaktuS
 Route::post('/admin/settings/jumlah-soal', [AdminController::class, 'updateJumlahSoal'])->name('admin.settings.jumlah');
 Route::post('/admin/gemini-prompt', [AdminController::class, 'getGeminiPrompt'])->name('admin.gemini.prompt');
 Route::post('/admin/import-gemini', [AdminController::class, 'importGeminiJson'])->name('admin.import.gemini');
+Route::post('/admin/question', [AdminController::class, 'storeQuestion'])->name('admin.question.store');
 Route::put('/admin/question/{id}', [AdminController::class, 'updateQuestion'])->name('admin.question.update');
 Route::delete('/admin/question/{id}', [AdminController::class, 'deleteQuestion'])->name('admin.question.delete');
 Route::delete('/admin/questions/bulk', [AdminController::class, 'bulkDeleteQuestions'])->name('admin.questions.bulk_delete');
