@@ -10,6 +10,11 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // FITUR SEEDER DIMATIKAN
+        // Agar soal yang sudah diedit/dihapus oleh admin di Dashboard 
+        // tidak tertimpa atau muncul kembali saat melakukan Pull/Deploy di Portainer.
+        
+        /*
         $csv_files = [
             base_path('soal_spmb_sma_2026_75_soal.csv'),
             base_path('soal_tpa.csv'),
@@ -45,5 +50,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SulitQuestionsSeeder::class,
         ]);
+        */
     }
 }
