@@ -539,6 +539,7 @@
                 $duplicateGroups = $questions->groupBy('soal')->filter(fn($group) => $group->count() > 1);
                 $totalDuplicates = $duplicateGroups->sum(fn($group) => $group->count() - 1);
                 $duplicateSoalsList = $duplicateGroups->keys()->toArray();
+                $emptyPembahasanCount = $questions->filter(fn($q) => empty(trim($q->pembahasan)))->count();
             @endphp
 
             <div class="admin-header">
@@ -555,6 +556,12 @@
                             <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Bebas Duplikat
                         </span>
                         @endif
+                        @if($emptyPembahasanCount > 0)
+                        <span style="color: #eab308; font-weight: 500; margin-left: 10px; padding: 4px 10px; background: rgba(234, 179, 8, 0.1); border-radius: 20px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 4px;" title="Terdapat soal yang belum memiliki pembahasan/langkah penyelesaian">
+                            <i data-lucide="info" style="width: 14px; height: 14px;"></i> {{ $emptyPembahasanCount }} tanpa pembahasan
+                        </span>
+                        @endif
+                    </p>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <form method="GET" action="{{ route('admin.dashboard') }}" style="display: flex; align-items: center; gap: 8px;">
@@ -611,6 +618,13 @@
                                                 <div>
                                                     <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; border: 1px solid rgba(239, 68, 68, 0.3);">
                                                         <i data-lucide="alert-triangle" style="width: 10px; height: 10px; display: inline-block; margin-right: 2px;"></i> Duplikat
+                                                    </span>
+                                                </div>
+                                            @endif
+                                            @if(empty(trim($q->pembahasan)))
+                                                <div style="margin-top: 5px;">
+                                                    <span style="background: rgba(234, 179, 8, 0.15); color: #eab308; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; border: 1px solid rgba(234, 179, 8, 0.3);">
+                                                        <i data-lucide="info" style="width: 10px; height: 10px; display: inline-block; margin-right: 2px;"></i> Tanpa Pembahasan
                                                     </span>
                                                 </div>
                                             @endif
@@ -688,6 +702,13 @@
                                                     <div>
                                                         <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; border: 1px solid rgba(239, 68, 68, 0.3);">
                                                             <i data-lucide="alert-triangle" style="width: 10px; height: 10px; display: inline-block; margin-right: 2px;"></i> Duplikat
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                                @if(empty(trim($q->pembahasan)))
+                                                    <div style="margin-top: 5px;">
+                                                        <span style="background: rgba(234, 179, 8, 0.15); color: #eab308; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; border: 1px solid rgba(234, 179, 8, 0.3);">
+                                                            <i data-lucide="info" style="width: 10px; height: 10px; display: inline-block; margin-right: 2px;"></i> Tanpa Pembahasan
                                                         </span>
                                                     </div>
                                                 @endif

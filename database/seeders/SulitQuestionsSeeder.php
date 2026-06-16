@@ -72,7 +72,10 @@ class SulitQuestionsSeeder extends Seeder
         ];
 
         foreach($questions as $q) {
-            Question::create($q);
+            Question::firstOrCreate(
+                ['soal' => $q['soal']],
+                $q
+            );
         }
 
         // Tambahan Soal Dummy untuk memenuhi kuota 50 soal per tab
@@ -82,18 +85,20 @@ class SulitQuestionsSeeder extends Seeder
             if ($currentCount < 50) {
                 $needed = 50 - $currentCount;
                 for ($i = 1; $i <= $needed; $i++) {
-                    Question::create([
-                        'kategori' => $mapel === 'TPA' ? 'TPA' : 'Akademik',
-                        'mapel' => $mapel,
-                        'tingkat_kesulitan' => 'Sedang',
-                        'soal' => "Soal Tambahan $mapel Nomor $i",
-                        'pilihan_a' => 'Pilihan A',
-                        'pilihan_b' => 'Pilihan B',
-                        'pilihan_c' => 'Pilihan C',
-                        'pilihan_d' => 'Pilihan D',
-                        'jawaban' => 'A',
-                        'bobot' => 2
-                    ]);
+                    Question::firstOrCreate(
+                        ['soal' => "Soal Tambahan $mapel Nomor $i"],
+                        [
+                            'kategori' => $mapel === 'TPA' ? 'TPA' : 'Akademik',
+                            'mapel' => $mapel,
+                            'tingkat_kesulitan' => 'Sedang',
+                            'pilihan_a' => 'Pilihan A',
+                            'pilihan_b' => 'Pilihan B',
+                            'pilihan_c' => 'Pilihan C',
+                            'pilihan_d' => 'Pilihan D',
+                            'jawaban' => 'A',
+                            'bobot' => 2
+                        ]
+                    );
                 }
             }
         }
