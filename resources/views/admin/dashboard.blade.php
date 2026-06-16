@@ -555,10 +555,17 @@
                             <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Bebas Duplikat
                         </span>
                         @endif
-                    </p>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444; padding: 12px 24px; font-weight: 500; display: flex; align-items: center; gap: 8px;" onclick="deleteSelectedQuestions()">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <form method="GET" action="{{ route('admin.dashboard') }}" style="display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #94a3b8; font-size: 0.9rem;">Urutkan:</span>
+                        <select name="sort" class="form-control" style="width: auto; padding: 8px 15px; border-color: rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.5);" onchange="this.form.submit()">
+                            <option value="terbaru" {{ $sort == 'terbaru' ? 'selected' : '' }}>Waktu (Terbaru)</option>
+                            <option value="soal_az" {{ $sort == 'soal_az' ? 'selected' : '' }}>Alfabet (Soal A-Z)</option>
+                            <option value="mapel" {{ $sort == 'mapel' ? 'selected' : '' }}>Mata Pelajaran</option>
+                        </select>
+                    </form>
+                    <button type="button" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444; padding: 10px 20px; font-weight: 500; display: flex; align-items: center; gap: 8px;" onclick="deleteSelectedQuestions()">
                         <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i> Hapus Terpilih
                     </button>
                 </div>

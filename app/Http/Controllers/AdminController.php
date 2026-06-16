@@ -25,12 +25,24 @@ class AdminController extends Controller
         return $settings;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $participants = Participant::orderBy('created_at', 'desc')->get();
-        $questions = Question::orderBy('mapel', 'asc')->orderBy('soal', 'asc')->get();
+        
+        $sort = $request->input('sort', 'terbaru');
+        $query = Question::query();
+        
+        if ($sort === 'soal_az') {
+            $query->orderBy('mapel', 'asc')->orderBy('soal', 'asc');
+        } elseif ($sort === 'mapel') {
+            $query->orderBy('mapel', 'asc')->orderBy('created_at', 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+        
+        $questions = $query->get();
         $settings = $this->getSettings();
-        return view('admin.dashboard', compact('participants', 'questions', 'settings'));
+        return view('admin.dashboard', compact('participants', 'questions', 'settings', 'sort'));
     }
 
     public function toggleKunciJawaban()
