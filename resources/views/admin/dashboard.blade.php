@@ -1033,8 +1033,9 @@
 
         let prompt = "Tolong perbaiki tata bahasa, ejaan, dan perbaiki penulisan rumus/angka matematika pada soal berikut ini menggunakan format LaTeX/MathJax. WAJIB gunakan pembatas \\( ... \\) untuk inline dan $$ ... $$ untuk blok matematika.\n";
         prompt += "Tolong buatkan juga langkah-langkah penyelesaian atau pembahasan yang jelas untuk soal ini.\n\n";
-        prompt += "PENTING: JANGAN PERNAH menggunakan tanda kutip ganda (\") di dalam teks jawaban, soal, maupun pembahasan. Gunakan tanda kutip tunggal (').\n";
-        prompt += "PENTING 2: JANGAN menggunakan baris baru (enter/newline) asli secara langsung di dalam string JSON. Jika butuh baris baru, ketikkan \\n di dalam teks.\n\n";
+        prompt += "PENTING 1: Struktur JSON (key dan value) WAJIB dibungkus dengan tanda kutip ganda (\"). JANGAN menggunakan tanda kutip tunggal (') untuk membungkus struktur JSON!\n";
+        prompt += "PENTING 2: Sebaliknya, JANGAN PERNAH menggunakan tanda kutip ganda (\") DI DALAM isi kalimat teks soal maupun pembahasan. Jika butuh tanda kutip di dalam teks, gunakan HANYA tanda kutip tunggal (').\n";
+        prompt += "PENTING 3: JANGAN menggunakan baris baru (enter/newline) asli secara langsung di dalam string JSON. Jika butuh baris baru, ketikkan \\n di dalam teks.\n\n";
         prompt += "KEMBALIKAN HANYA DALAM BENTUK JSON OBJECT mentah seperti struktur ini:\n";
         prompt += `{\n  "soal": "teks soal...",\n  "pilihan_a": "...",\n  "pilihan_b": "...",\n  "pilihan_c": "...",\n  "pilihan_d": "...",\n  "jawaban": "${jawaban}",\n  "pembahasan": "penjelasan langkah penyelesaian..."\n}\n\n`;
         prompt += "Berikut data soal aslinya:\n";
