@@ -534,10 +534,28 @@
 
         <!-- SECTION: BANK SOAL -->
         <section id="menu-bank" class="admin-section">
+            @php
+                $groupedQuestions = $questions->groupBy('mapel');
+                $duplicateGroups = $questions->groupBy('soal')->filter(fn($group) => $group->count() > 1);
+                $totalDuplicates = $duplicateGroups->sum(fn($group) => $group->count() - 1);
+                $duplicateSoalsList = $duplicateGroups->keys()->toArray();
+            @endphp
+
             <div class="admin-header">
                 <div>
                     <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 5px;">Bank Soal Tersimpan</h2>
-                    <p style="color: #94a3b8; margin: 0; font-size: 1.05rem;">Total {{ $questions->count() }} soal di dalam bank soal saat ini.</p>
+                    <p style="color: #94a3b8; margin: 0; font-size: 1.05rem;">
+                        Total {{ $questions->count() }} soal.
+                        @if($totalDuplicates > 0)
+                        <span style="color: #ef4444; font-weight: 500; margin-left: 10px; padding: 4px 10px; background: rgba(239, 68, 68, 0.1); border-radius: 20px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i> Terdeteksi {{ $totalDuplicates }} soal duplikat
+                        </span>
+                        @else
+                        <span style="color: #22c55e; font-weight: 500; margin-left: 10px; padding: 4px 10px; background: rgba(34, 197, 94, 0.1); border-radius: 20px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Bebas Duplikat
+                        </span>
+                        @endif
+                    </p>
                 </div>
                 <div>
                     <button type="button" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444; padding: 12px 24px; font-weight: 500; display: flex; align-items: center; gap: 8px;" onclick="deleteSelectedQuestions()">
@@ -545,10 +563,6 @@
                     </button>
                 </div>
             </div>
-
-            @php
-                $groupedQuestions = $questions->groupBy('mapel');
-            @endphp
 
             @if($questions->count() > 0)
                 <div class="admin-tabs">
@@ -579,13 +593,20 @@
                             </thead>
                             <tbody>
                                 @foreach($questions as $q)
-                                    <tr>
+                                    <tr style="{{ in_array($q->soal, $duplicateSoalsList) ? 'background: rgba(239, 68, 68, 0.03);' : '' }}">
                                         <td style="vertical-align: top; text-align: center;">
                                             <input type="checkbox" class="cb-question" value="{{ $q->id }}">
                                         </td>
                                         <td style="vertical-align: top; width: 120px;">
                                             <div style="font-weight: 600; margin-bottom: 8px; color: #f8fafc; font-size: 0.95rem;">{{ $q->mapel }}</div>
-                                            <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
+                                            <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px; display: inline-block; margin-bottom: 6px;">{{ $q->kategori }}</span>
+                                            @if(in_array($q->soal, $duplicateSoalsList))
+                                                <div>
+                                                    <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; border: 1px solid rgba(239, 68, 68, 0.3);">
+                                                        <i data-lucide="alert-triangle" style="width: 10px; height: 10px; display: inline-block; margin-right: 2px;"></i> Duplikat
+                                                    </span>
+                                                </div>
+                                            @endif
                                         </td>
                                         <td style="vertical-align: top;">
                                             <div style="max-height: 180px; min-width: 350px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
@@ -650,12 +671,19 @@
                                 </thead>
                                 <tbody>
                                     @foreach($qs as $q)
-                                        <tr>
+                                        <tr style="{{ in_array($q->soal, $duplicateSoalsList) ? 'background: rgba(239, 68, 68, 0.03);' : '' }}">
                                             <td style="vertical-align: top; text-align: center;">
                                                 <input type="checkbox" class="cb-question" value="{{ $q->id }}">
                                             </td>
                                             <td style="vertical-align: top; width: 120px;">
-                                                <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px;">{{ $q->kategori }}</span>
+                                                <span class="badge-status status-mengerjakan" style="font-size: 0.7rem; padding: 4px 8px; display: inline-block; margin-bottom: 6px;">{{ $q->kategori }}</span>
+                                                @if(in_array($q->soal, $duplicateSoalsList))
+                                                    <div>
+                                                        <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; border: 1px solid rgba(239, 68, 68, 0.3);">
+                                                            <i data-lucide="alert-triangle" style="width: 10px; height: 10px; display: inline-block; margin-right: 2px;"></i> Duplikat
+                                                        </span>
+                                                    </div>
+                                                @endif
                                             </td>
                                             <td style="vertical-align: top;">
                                                 <div style="max-height: 180px; min-width: 350px; overflow-y: auto; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; padding-right: 15px;">
