@@ -493,17 +493,24 @@
                                 </td>
                                 <td>
                                     @if($p->tab_results && is_array($p->tab_results))
-                                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                                        <div style="display: flex; flex-direction: column; gap: 8px;">
                                             @foreach($p->tab_results as $mapel => $res)
-                                                <div style="font-size: 0.85rem; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05);">
-                                                    <span style="font-weight: 500; color: #e2e8f0;">{{ $mapel }}</span>
-                                                    <span>
-                                                        <span style="color: #3b82f6; font-weight: bold; margin-right: 12px;">{{ $res['score'] }}</span>
-                                                        <span style="color: #94a3b8; display: inline-flex; align-items: center; gap: 4px;">
-                                                            <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
-                                                            {{ floor($res['time_taken_seconds'] / 60) }}m {{ $res['time_taken_seconds'] % 60 }}s
+                                                <div style="font-size: 0.85rem; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                                                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                                        <span style="font-weight: 600; color: #e2e8f0;">{{ $mapel }}</span>
+                                                        <span style="color: #3b82f6; font-weight: bold; font-size: 0.95rem;">Nilai: {{ $res['score'] }}</span>
+                                                    </div>
+                                                    <div style="display: flex; justify-content: space-between; color: #94a3b8; font-size: 0.8rem; align-items: center;">
+                                                        <span style="display: flex; gap: 10px;">
+                                                            <span style="color: #22c55e; display: flex; align-items: center; gap: 3px;" title="Benar"><i data-lucide="check-circle" style="width: 12px; height: 12px;"></i> {{ $res['correct'] ?? 0 }}</span>
+                                                            <span style="color: #ef4444; display: flex; align-items: center; gap: 3px;" title="Salah"><i data-lucide="x-circle" style="width: 12px; height: 12px;"></i> {{ $res['wrong'] ?? 0 }}</span>
+                                                            <span style="color: #eab308; display: flex; align-items: center; gap: 3px;" title="Kosong"><i data-lucide="minus-circle" style="width: 12px; height: 12px;"></i> {{ $res['unanswered'] ?? 0 }}</span>
                                                         </span>
-                                                    </span>
+                                                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                                                            <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
+                                                            {{ floor(($res['time_taken_seconds'] ?? 0) / 60) }}m {{ ($res['time_taken_seconds'] ?? 0) % 60 }}s
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
