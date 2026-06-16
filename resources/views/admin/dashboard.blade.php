@@ -601,8 +601,11 @@
                                         <td style="vertical-align: top; width: 100px;">
                                             <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
                                         </td>
-                                        <td style="vertical-align: top; width: 100px;">
+                                        <td style="vertical-align: top; width: 140px;">
                                             <div style="display: flex; gap: 8px;">
+                                                <button type="button" class="btn-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3);" onclick="openDetailModal({{ json_encode($q) }})" title="Lihat Detail">
+                                                    <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                                                </button>
                                                 <button type="button" class="btn-icon btn-edit" onclick="openEditModal({{ json_encode($q) }})" title="Edit Soal">
                                                     <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
                                                 </button>
@@ -668,8 +671,11 @@
                                             <td style="vertical-align: top; width: 100px;">
                                                 <span class="badge-status status-selesai">{{ $q->tingkat_kesulitan }}</span>
                                             </td>
-                                            <td style="vertical-align: top; width: 100px;">
+                                            <td style="vertical-align: top; width: 140px;">
                                                 <div style="display: flex; gap: 8px;">
+                                                    <button type="button" class="btn-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3);" onclick="openDetailModal({{ json_encode($q) }})" title="Lihat Detail">
+                                                        <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                                                    </button>
                                                     <button type="button" class="btn-icon btn-edit" onclick="openEditModal({{ json_encode($q) }})" title="Edit Soal">
                                                         <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
                                                     </button>
@@ -901,6 +907,52 @@
             </div>
         </div>
 
+        <!-- Modal Detail Soal -->
+        <div id="detailModal" class="modal-overlay">
+            <div class="modal-content" style="max-width: 800px;">
+                <div class="modal-header">
+                    <h3 class="modal-title">Detail Soal & Pembahasan</h3>
+                    <button type="button" class="modal-close" onclick="closeDetailModal()">
+                        <i data-lucide="x" style="width: 24px; height: 24px;"></i>
+                    </button>
+                </div>
+                <div id="detailContent" style="color: #f8fafc; font-size: 1rem; line-height: 1.6;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <span id="detailKategori" class="badge-status status-mengerjakan"></span>
+                        <span id="detailMapel" class="badge-status" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;"></span>
+                        <span id="detailTingkat" class="badge-status status-selesai"></span>
+                    </div>
+                    <div id="detailSoalText" style="margin-bottom: 25px; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                        <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <strong style="color: #cbd5e1;">A:</strong> <span id="detailA"></span>
+                        </div>
+                        <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <strong style="color: #cbd5e1;">B:</strong> <span id="detailB"></span>
+                        </div>
+                        <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <strong style="color: #cbd5e1;">C:</strong> <span id="detailC"></span>
+                        </div>
+                        <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <strong style="color: #cbd5e1;">D:</strong> <span id="detailD"></span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        <strong style="color: #22c55e; font-size: 1.1rem; display: block; margin-bottom: 10px;">Kunci Jawaban: <span id="detailJawaban"></span></strong>
+                    </div>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                        <h4 style="margin: 0 0 15px 0; color: #a855f7; font-family: 'Outfit', sans-serif;">Pembahasan / Langkah Penyelesaian</h4>
+                        <div id="detailPembahasan" style="padding: 15px; background: rgba(168, 85, 247, 0.05); border-radius: 8px; border: 1px solid rgba(168, 85, 247, 0.2);">
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; margin-top: 25px;">
+                    <button type="button" class="btn btn-outline" onclick="closeDetailModal()">Tutup</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 </div>
 
@@ -1043,6 +1095,42 @@
 
     function closeEditModal() {
         document.getElementById('editModal').classList.remove('active');
+        window.isModalOpen = false;
+    }
+
+    // Detail Modal Functions
+    function openDetailModal(question) {
+        document.getElementById('detailModal').classList.add('active');
+        
+        document.getElementById('detailKategori').textContent = question.kategori || '-';
+        document.getElementById('detailMapel').textContent = question.mapel || '-';
+        document.getElementById('detailTingkat').textContent = question.tingkat_kesulitan || '-';
+        
+        function escapeHtml(unsafe) {
+            return (unsafe || '').toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\n/g, '<br>');
+        }
+
+        document.getElementById('detailSoalText').innerHTML = escapeHtml(question.soal);
+        document.getElementById('detailA').innerHTML = escapeHtml(question.pilihan_a);
+        document.getElementById('detailB').innerHTML = escapeHtml(question.pilihan_b);
+        document.getElementById('detailC').innerHTML = escapeHtml(question.pilihan_c);
+        document.getElementById('detailD').innerHTML = escapeHtml(question.pilihan_d);
+        document.getElementById('detailJawaban').textContent = question.jawaban || '-';
+        document.getElementById('detailPembahasan').innerHTML = question.pembahasan ? escapeHtml(question.pembahasan) : '<i>Belum ada pembahasan untuk soal ini.</i>';
+        
+        window.isModalOpen = true;
+        lucide.createIcons();
+
+        // Render MathJax if loaded
+        if (typeof MathJax !== 'undefined') {
+            MathJax.typesetPromise([document.getElementById('detailContent')]).catch(function (err) {
+                console.log('MathJax typeset failed: ' + err.message);
+            });
+        }
+    }
+
+    function closeDetailModal() {
+        document.getElementById('detailModal').classList.remove('active');
         window.isModalOpen = false;
     }
 
