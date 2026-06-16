@@ -979,7 +979,7 @@
                     </div>
                     <div class="form-group">
                         <label>Pembahasan / Langkah Penyelesaian (Opsional)</label>
-                        <textarea name="pembahasan" id="edit-pembahasan" class="form-control" rows="3"></textarea>
+                        <textarea name="pembahasan" id="edit-pembahasan" class="form-control" rows="8" style="resize: vertical;"></textarea>
                     </div>
 
                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
