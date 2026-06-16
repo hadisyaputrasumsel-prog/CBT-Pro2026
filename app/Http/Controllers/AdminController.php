@@ -99,8 +99,13 @@ class AdminController extends Controller
         // HAPUS karakter control asli (enter/newline/tab mentah) yang merusak format JSON
         $jsonString = preg_replace('/[\r\n\t]+/', ' ', $jsonString);
 
-        // Perbaiki backslash tunggal dari LaTeX (\frac menjadi \\frac) agar JSON valid
-        $jsonString = preg_replace('/(?<!\\\\)\\\\(?![\\\\"ntr])/', '\\\\\\\\', $jsonString);
+        // Perbaiki backslash dari LaTeX (\frac, \sin, \to) agar JSON valid
+        $jsonString = preg_replace_callback('/\\\\\\\\|\\\\([^"\\\\\/nu])/', function($matches) {
+            if (isset($matches[1])) {
+                return '\\\\' . $matches[1];
+            }
+            return $matches[0];
+        }, $jsonString);
 
         $data = json_decode(trim($jsonString), true);
 

@@ -1092,8 +1092,11 @@
             // HAPUS karakter control asli (enter/newline/tab mentah) yang merusak format JSON
             text = text.replace(/[\r\n\t]+/g, ' ');
             
-            // Fix backslashes for MathJax (but avoid breaking \n, \t, \r)
-            text = text.replace(/(?<!\\)\\(?![\\"ntr])/g, '\\\\');
+            // Fix backslashes for MathJax (but avoid breaking \n, \", \\, \/)
+            text = text.replace(/\\\\|\\([^"\\\/nu])/g, function(match, group1) {
+                if (group1) return '\\\\' + group1;
+                return match;
+            });
             let data = JSON.parse(text);
             
             if (data.soal) document.getElementById('edit-soal').value = data.soal;
