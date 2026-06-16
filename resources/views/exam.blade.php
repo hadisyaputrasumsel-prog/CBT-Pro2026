@@ -254,7 +254,7 @@
                                     <div style="font-size: 0.95rem; color: #94a3b8;">
                                         <div style="margin-bottom: 5px;">Jawaban Anda: <span style="color: #ef4444; ${wd.jawaban_user !== '(Kosong / Tidak Menjawab)' ? 'text-decoration: line-through;' : ''}">${wd.jawaban_user}</span></div>
                                         <div style="margin-bottom: 5px;">Kunci Jawaban: <span style="color: #22c55e;">${wd.kunci}</span></div>
-                                        ${wd.pembahasan ? `<div style="margin-top: 10px; padding: 12px; background: rgba(168, 85, 247, 0.08); border-left: 3px solid #a855f7; border-radius: 6px; color: #f8fafc;"><strong style="color:#c084fc; font-size: 0.85rem; display:block; margin-bottom: 5px;">PEMBAHASAN:</strong>${wd.pembahasan.replace(/\\n/g, '<br>')}</div>` : ''}
+                                        ${wd.pembahasan ? `<div style="margin-top: 10px; padding: 12px; background: rgba(168, 85, 247, 0.08); border-left: 3px solid #a855f7; border-radius: 6px; color: #334155;"><strong style="color:#a855f7; font-size: 0.85rem; display:block; margin-bottom: 5px;">PEMBAHASAN:</strong>${wd.pembahasan.replace(/\\n/g, '<br>')}</div>` : `<div style="margin-top: 10px; padding: 10px; font-style: italic; color: #94a3b8; font-size: 0.9rem;">(Belum ada pembahasan untuk soal ini)</div>`}
                                     </div>
                                 </div>
                             `).join('')}
