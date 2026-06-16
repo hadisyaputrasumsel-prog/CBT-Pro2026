@@ -28,7 +28,7 @@ class AdminController extends Controller
     public function index()
     {
         $participants = Participant::orderBy('created_at', 'desc')->get();
-        $questions = Question::orderBy('created_at', 'desc')->get();
+        $questions = Question::orderBy('mapel', 'asc')->orderBy('soal', 'asc')->get();
         $settings = $this->getSettings();
         return view('admin.dashboard', compact('participants', 'questions', 'settings'));
     }
