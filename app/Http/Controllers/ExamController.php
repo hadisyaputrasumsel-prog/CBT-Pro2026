@@ -21,11 +21,18 @@ class ExamController extends Controller
             'nim' => 'nullable|string|max:255',
         ]);
 
-        $tpa_ids = Question::where('mapel', 'TPA')->inRandomOrder()->limit(50)->pluck('id')->toArray();
+        $path = storage_path('app/settings.json');
+        $jumlah_soal = 50;
+        if (file_exists($path)) {
+            $settings = json_decode(file_get_contents($path), true);
+            $jumlah_soal = $settings['jumlah_soal_per_mapel'] ?? 50;
+        }
+
+        $tpa_ids = Question::where('mapel', 'TPA')->inRandomOrder()->limit($jumlah_soal)->pluck('id')->toArray();
         $mapel_ids = [];
         $mapels = ['Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris'];
         foreach ($mapels as $mapel) {
-            $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit(50)->pluck('id')->toArray();
+            $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit($jumlah_soal)->pluck('id')->toArray();
             $mapel_ids = array_merge($mapel_ids, $ids);
         }
         $questions_list = array_merge($tpa_ids, $mapel_ids);
@@ -183,9 +190,17 @@ class ExamController extends Controller
                     'soal' => $q->soal,
                     'kunci' => $show_kunci ? ($q->$col_jawaban ?? '-') : '*** Dirahasiakan ***',
                     'jawaban_user' => $q->$col_ans ?? '-',
+                    'pembahasan' => $show_kunci ? ($q->pembahasan ?? null) : null,
                 ];
             } else {
                 $unanswered++;
+                $col_jawaban = 'pilihan_' . strtolower($q->jawaban);
+                $wrong_details[] = [
+                    'soal' => $q->soal,
+                    'kunci' => $show_kunci ? ($q->$col_jawaban ?? '-') : '*** Dirahasiakan ***',
+                    'jawaban_user' => '(Kosong / Tidak Menjawab)',
+                    'pembahasan' => $show_kunci ? ($q->pembahasan ?? null) : null,
+                ];
             }
         }
 

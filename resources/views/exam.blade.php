@@ -245,15 +245,16 @@
                 wrongQuestionsHtml = `
                     <div class="wrong-questions-section" style="margin-top: 30px; text-align: left;">
                         <h3 style="margin-bottom: 15px; color: #ef4444; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="x-circle"></i> Detail Jawaban Salah
+                            <i data-lucide="x-circle"></i> Detail Evaluasi Jawaban
                         </h3>
                         <div class="wrong-list" style="display: flex; flex-direction: column; gap: 15px;">
                             ${data.wrong_details.map((wd, index) => `
                                 <div class="wrong-item" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
-                                    <div style="margin-bottom: 10px; font-weight: 500;">Soal ${index + 1}: <br><span style="font-weight: 400">${wd.soal.replace(/\\n/g, '<br>')}</span></div>
+                                    <div style="margin-bottom: 10px; font-weight: 500;">Soal ${index + 1}: <br><span style="font-weight: 400">${(wd.soal || '').replace(/\\n/g, '<br>')}</span></div>
                                     <div style="font-size: 0.95rem; color: #94a3b8;">
-                                        <div style="margin-bottom: 5px;">Jawaban Anda: <span style="color: #ef4444; text-decoration: line-through;">${wd.jawaban_user}</span></div>
-                                        <div>Kunci Jawaban: <span style="color: #22c55e;">${wd.kunci}</span></div>
+                                        <div style="margin-bottom: 5px;">Jawaban Anda: <span style="color: #ef4444; ${wd.jawaban_user !== '(Kosong / Tidak Menjawab)' ? 'text-decoration: line-through;' : ''}">${wd.jawaban_user}</span></div>
+                                        <div style="margin-bottom: 5px;">Kunci Jawaban: <span style="color: #22c55e;">${wd.kunci}</span></div>
+                                        ${wd.pembahasan ? `<div style="margin-top: 10px; padding: 12px; background: rgba(168, 85, 247, 0.08); border-left: 3px solid #a855f7; border-radius: 6px; color: #f8fafc;"><strong style="color:#c084fc; font-size: 0.85rem; display:block; margin-bottom: 5px;">PEMBAHASAN:</strong>${wd.pembahasan.replace(/\\n/g, '<br>')}</div>` : ''}
                                     </div>
                                 </div>
                             `).join('')}
@@ -289,6 +290,11 @@
                 alert(`Waktu untuk ${mapelName} habis! Jawaban otomatis dikumpulkan dan dikunci.`);
             } else {
                 alert(`Jawaban untuk ${mapelName} berhasil dikumpulkan!`);
+            }
+            
+            // Render MathJax for the newly added result elements (soal, pembahasan)
+            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                MathJax.typesetPromise([tabContent]).catch((err) => console.error(err.message));
             }
         })
         .catch(err => {

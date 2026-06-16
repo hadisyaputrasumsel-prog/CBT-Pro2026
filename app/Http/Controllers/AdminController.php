@@ -13,11 +13,14 @@ class AdminController extends Controller
     {
         $path = storage_path('app/settings.json');
         if (!file_exists($path)) {
-            return ['show_kunci_jawaban' => true, 'menit_per_soal' => 1];
+            return ['show_kunci_jawaban' => true, 'menit_per_soal' => 1, 'jumlah_soal_per_mapel' => 50];
         }
         $settings = json_decode(file_get_contents($path), true) ?? ['show_kunci_jawaban' => true];
         if (!isset($settings['menit_per_soal'])) {
             $settings['menit_per_soal'] = 1;
+        }
+        if (!isset($settings['jumlah_soal_per_mapel'])) {
+            $settings['jumlah_soal_per_mapel'] = 50;
         }
         return $settings;
     }
@@ -44,6 +47,14 @@ class AdminController extends Controller
         $settings['menit_per_soal'] = max(1, (int) $request->input('menit_per_soal', 1));
         file_put_contents(storage_path('app/settings.json'), json_encode($settings));
         return redirect()->back()->with('success', 'Waktu per soal berhasil diubah');
+    }
+
+    public function updateJumlahSoal(Request $request)
+    {
+        $settings = $this->getSettings();
+        $settings['jumlah_soal_per_mapel'] = max(1, (int) $request->input('jumlah_soal_per_mapel', 50));
+        file_put_contents(storage_path('app/settings.json'), json_encode($settings));
+        return redirect()->back()->with('success', 'Jumlah soal per mata pelajaran berhasil diubah');
     }
 
     public function getGeminiPrompt(Request $request)

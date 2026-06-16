@@ -818,6 +818,26 @@
                         </button>
                     </form>
                 </div>
+
+                <div class="stat-card" style="flex-direction: row; justify-content: space-between; max-width: 700px; padding: 30px;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7; width: 64px; height: 64px; border-radius: 16px;">
+                            <i data-lucide="layers" style="width: 28px; height: 28px;"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.3rem; color: #f8fafc; font-family: 'Outfit', sans-serif; margin: 0 0 8px 0;">Jumlah Soal Per Mapel</h3>
+                            <p style="color: #94a3b8; font-size: 0.95rem; margin: 0; max-width: 350px;">Atur berapa banyak soal yang akan dimunculkan secara acak untuk setiap peserta pada masing-masing mata pelajaran.</p>
+                        </div>
+                    </div>
+                    <form action="{{ route('admin.settings.jumlah') }}" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                        @csrf
+                        <input type="number" name="jumlah_soal_per_mapel" value="{{ $settings['jumlah_soal_per_mapel'] ?? 50 }}" min="1" class="form-control" style="width: 80px; text-align: center; font-weight: bold; font-size: 1.1rem; border-color: rgba(168, 85, 247, 0.3);">
+                        <span style="color: #94a3b8;">Soal</span>
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 16px; margin-left: 10px; background: #a855f7; border-color: #a855f7;">
+                            <i data-lucide="save" style="width: 18px; height: 18px;"></i> Simpan
+                        </button>
+                    </form>
+                </div>
             </div>
         </section>
 
