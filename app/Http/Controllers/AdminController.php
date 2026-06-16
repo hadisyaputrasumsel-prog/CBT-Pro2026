@@ -76,7 +76,15 @@ class AdminController extends Controller
         // Bersihkan string dari markdown json
         $jsonString = preg_replace('/```json\s*/', '', $jsonString);
         $jsonString = preg_replace('/```\s*/', '', $jsonString);
-        
+        // Ekstrak hanya bagian JSON array-nya saja untuk mengabaikan teks basa-basi Gemini
+        $start = strpos($jsonString, '[');
+        $end = strrpos($jsonString, ']');
+        if ($start !== false && $end !== false && $end > $start) {
+            $jsonString = substr($jsonString, $start, $end - $start + 1);
+        } else {
+            return redirect()->back()->with('error', "Tidak dapat menemukan format Array JSON yang valid di dalam teks.");
+        }
+
         // HAPUS karakter control asli (enter/newline/tab mentah) yang merusak format JSON
         $jsonString = preg_replace('/[\r\n\t]+/', ' ', $jsonString);
 
