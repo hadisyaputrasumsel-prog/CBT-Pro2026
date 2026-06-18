@@ -79,7 +79,7 @@ class SulitQuestionsSeeder extends Seeder
         }
 
         // Tambahan Soal Dummy untuk memenuhi kuota 50 soal per tab
-        $mapels = ['TPA', 'Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris'];
+        $mapels = ['TPA', 'Matematika', 'IPA', 'IPS', 'Bahasa Indonesia', 'Bahasa Inggris'];
         foreach ($mapels as $mapel) {
             $currentCount = Question::where('mapel', $mapel)->count();
             if ($currentCount < 50) {

@@ -793,6 +793,7 @@
                                 <option value="TPA">TPA</option>
                                 <option value="Matematika">Matematika</option>
                                 <option value="IPA">IPA</option>
+                                <option value="IPS">IPS</option>
                                 <option value="Bahasa Indonesia">Bahasa Indonesia</option>
                                 <option value="Bahasa Inggris">Bahasa Inggris</option>
                             </select>

@@ -30,7 +30,7 @@ class ExamController extends Controller
 
         $tpa_ids = Question::where('mapel', 'TPA')->inRandomOrder()->limit($jumlah_soal)->pluck('id')->toArray();
         $mapel_ids = [];
-        $mapels = ['Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris'];
+        $mapels = ['Matematika', 'IPA', 'IPS', 'Bahasa Indonesia', 'Bahasa Inggris'];
         foreach ($mapels as $mapel) {
             $ids = Question::where('mapel', $mapel)->inRandomOrder()->limit($jumlah_soal)->pluck('id')->toArray();
             $mapel_ids = array_merge($mapel_ids, $ids);
@@ -63,7 +63,7 @@ class ExamController extends Controller
         $questions = Question::whereIn('id', $participant->questions_list)->get();
         // Sort questions by mapel logically
         $questions = $questions->sortBy(function($q) {
-            $order = ['TPA' => 1, 'Matematika' => 2, 'IPA' => 3, 'Bahasa Indonesia' => 4, 'Bahasa Inggris' => 5];
+            $order = ['TPA' => 1, 'Matematika' => 2, 'IPA' => 3, 'IPS' => 4, 'Bahasa Indonesia' => 5, 'Bahasa Inggris' => 6];
             return $order[$q->mapel] ?? 99;
         });
 
@@ -220,8 +220,8 @@ class ExamController extends Controller
         
         $participant->tab_results = $tab_results;
         
-        // Cek jika ini adalah tab kelima / terakhir yang disubmit (jika perlu)
-        if (count($tab_results) >= 5) {
+        // Cek jika ini adalah tab keenam / terakhir yang disubmit (jika perlu)
+        if (count($tab_results) >= 6) {
             $participant->status = 'selesai';
             // Hitung rata-rata final_score atau biarkan 0 jika tidak perlu
             $participant->score = collect($tab_results)->avg('score');
@@ -256,7 +256,7 @@ class ExamController extends Controller
         foreach ($tab_results as $res) {
             $totalScore += $res['score'] ?? 0;
         }
-        $avgScore = round($totalScore / 5, 2);
+        $avgScore = count($tab_results) > 0 ? round($totalScore / count($tab_results), 2) : 0;
 
         $participant->update([
             'status' => 'selesai',

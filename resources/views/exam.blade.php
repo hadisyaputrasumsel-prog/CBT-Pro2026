@@ -106,7 +106,7 @@
             <form id="cbtForm" method="POST" action="{{ route('exam.submit') }}">
                 @csrf
                 <div class="tabs-container">
-                    @php $levels = ['TPA', 'Matematika', 'IPA', 'Bahasa Indonesia', 'Bahasa Inggris']; @endphp
+                    @php $levels = ['TPA', 'Matematika', 'IPA', 'IPS', 'Bahasa Indonesia', 'Bahasa Inggris']; @endphp
                     @foreach($levels as $index => $level)
                         <button type="button" class="tab-btn {{ $index === 0 ? 'active' : '' }}" data-target="tab-{{ str_replace(' ', '-', strtolower($level)) }}">
                             {{ $level }}
